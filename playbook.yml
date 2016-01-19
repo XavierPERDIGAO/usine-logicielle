@@ -1,0 +1,23 @@
+---
+- hosts: all
+  sudo: true
+  tasks:
+    - name: Mise à jour de l'apt cache
+      apt: update_cache=yes
+    - name: Installation d'Apache2
+      apt: name=apache2 state=present
+    - name: installer mysql
+      apt: name=mysql-server state=present
+    - name: Installation de PHP
+      apt: name=php5 state=present
+    - name: Création de phpinfo.php
+      lineinfile: dest=/var/www/html/phpinfo.php
+                  regexp='^'
+                  line=''
+                  state=present
+                  create=True
+    - name: Ajout de la fonction phpinfo()
+      lineinfile: dest=/var/www/html/phpinfo.php
+                  regexp='^'
+                  line='<?php\nphpinfo();\n?>'
+                  state=present
