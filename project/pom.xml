@@ -11,6 +11,10 @@
     <properties>
         <spark.version>2.3</spark.version>
         <junit.version>4.12</junit.version>
+        <mavenExec.version>1.2.1</mavenExec.version>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <exec.mainClass>fr.esiee.usineLogicielle.Main</exec.mainClass>
     </properties>
 
     <dependencies>
@@ -32,4 +36,24 @@
             <version>${spark.version}</version>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>${mavenExec.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <mainClass>${exec.mainClass}</mainClass>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
