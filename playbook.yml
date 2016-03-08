@@ -4,6 +4,14 @@
   tasks:
     - name: Mise à jour de l'apt cache
       apt: update_cache=yes
+    - name: Ajout de la clef APT Jenkins 
+      apt_key: url=https://jenkins-ci.org/debian/jenkins-ci.org.key
+    - name: Ajout du dépôt Jenkins dans les sources
+      shell: "echo deb http://pkg.jenkins-ci.org/debian binary/ > /etc/apt/sources.list.d/jenkins.list"
+    - name: Installation de Jenkins
+      apt: name=jenkins update_cache=yes
+    - name: Démarrage de Jenkins
+      service: name=jenkins state=started enabled=yes
     - name: Installation d'Apache2
       apt: name=apache2 state=present
     - name: Installation de Git
@@ -16,3 +24,10 @@
       apt: name=openjdk-8-jdk state=present
     - name: Selection de Java 8 par defaut
       alternatives: name=java path=/usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java
+    - name: Installation des plugins pour Jenkins
+      shell: "wget http://localhost:8080/jnlpJars/jenkins-cli.jar && \
+              java -jar jenkins-cli.jar -s http://localhost:8080 install-plugin git && \
+              java -jar jenkins-cli.jar -s http://localhost:8080 install-plugin github && \
+              rm -rf jenkins-cli.jar"
+    - name: Redémarrage de Jenkins
+      service: name=jenkins state=restarted
