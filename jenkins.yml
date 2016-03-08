@@ -1,0 +1,18 @@
+---
+- name: Ajout de la clef APT Jenkins 
+  apt_key: url=https://jenkins-ci.org/debian/jenkins-ci.org.key
+- name: Ajout du dépôt Jenkins dans les sources
+  shell: "echo deb http://pkg.jenkins-ci.org/debian binary/ > /etc/apt/sources.list.d/jenkins.list"
+- name: Installation de Jenkins
+  apt: name=jenkins update_cache=yes
+- name: Démarrage de Jenkins
+  service: name=jenkins state=started enabled=yes
+- name: En attente de Jenkins...
+  wait_for: host=127.0.0.1 port=8080 delay=15 state=drained
+- name: Installation des plugins pour Jenkins
+  shell: "wget http://localhost:8080/jnlpJars/jenkins-cli.jar && \
+          java -jar jenkins-cli.jar -s http://localhost:8080 install-plugin git && \
+          java -jar jenkins-cli.jar -s http://localhost:8080 install-plugin github && \
+          rm -rf jenkins-cli.jar"
+- name: Redémarrage de Jenkins
+  service: name=jenkins state=restarted

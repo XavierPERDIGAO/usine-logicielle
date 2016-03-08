@@ -1,0 +1,60 @@
+---
+- name: Installation d'unzip
+  apt: name=unzip
+ 
+- name: Ajout du groupe sonar
+  group: name="sonar"
+
+- name: Ajout de l'utilisateur sonar
+  user:
+    name="{{sonar.owner}}"
+    group="{{sonar.group}}"
+    home="{{sonar.base_dir}}"
+    shell="/bin/bash"
+    comment="Sonar User"
+
+- name: Téléchargement de SonarQube
+  get_url: url="http://downloads.sonarsource.com/sonarqube/{{sonar.archive}}" dest="/tmp/{{sonar.archive}}"
+
+- name: Creation du home SonaQube
+  file:
+    dest="{{sonar.base_dir}}"
+    state=directory
+    owner="{{sonar.owner}}"
+    group="{{sonar.group}}"
+
+- name: Extraction de l'archive
+  unarchive:
+    src="/tmp/{{sonar.archive}}"
+    dest="{{sonar.base_dir}}/"
+    owner="{{sonar.owner}}"
+    group="{{sonar.group}}"
+    copy=no
+    creates="{{sonar.base_dir}}/{{sonar.name}}/bin"
+  sudo_user: "{{sonar.owner}}"
+
+- name: Création d'un lien symbolique sonar
+  file:
+    src="{{sonar.base_dir}}/{{sonar.name}}"
+    dest="{{sonar.base_dir}}/sonar"
+    state=link
+    owner="{{sonar.owner}}"
+    group="{{sonar.group}}"
+
+- name: Installation du fichier de configuration de SonarQube
+  template:
+    src=sonar.properties.j2
+    dest="{{sonar.base_dir}}/{{sonar.name}}/conf/sonar.properties"
+
+- name: Installation du script d'init de SonarQube
+  sudo: yes
+  file:
+    src="{{sonar.base_dir}}/{{sonar.name}}/bin/linux-x86-{{ansible_userspace_bits}}/sonar.sh"
+    dest="/etc/init.d/sonar"
+    state=link
+    mode=0755
+    owner="root"
+    group="root"
+
+- name: Démarrage de SonarQube
+  service: name=sonar state=started enabled=yes

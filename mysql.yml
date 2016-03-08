@@ -1,0 +1,49 @@
+- name: Installation de MySQL
+  apt: name={{item}} state=present
+  with_items:
+    - mysql-server-5.6
+    - mysql-client-5.6
+    - mysql-common-5.6
+
+- name: Démarrage de MySQL
+  action: service name=mysql state=started
+
+- name: Installation du module Python MySQLB
+  apt: name=python-mysqldb state=installed
+  
+- name: Changer les mots de pass de tous les comptes root
+  mysql_user:
+    name=root
+    host={{item}}
+    password=root
+    login_user=root
+    login_password=root
+    priv=*.*:ALL,GRANT
+    check_implicit_admin=yes
+  with_items:
+    - "{{ansible_hostname}}"
+    - 127.0.0.1
+    - ::1
+    - localhost
+
+- name: Creation de l'utilisateur sonar
+  mysql_user:
+    host="{{item}}"
+    name="{{sonar.jdbc}}"
+    password="{{sonar.jdbc}}"
+    priv="{{sonar.jdbc}}.*:ALL"
+    login_user=root    
+    login_password=root
+  with_items:
+      - 127.0.0.1
+      - ::1
+      - localhost
+  sudo_user: "mysql"
+
+- name: Création de la BDD MySQL
+  mysql_db:
+    name="{{sonar.jdbc}}"
+    state=present
+    login_user="{{sonar.jdbc}}" 
+    login_password="{{sonar.jdbc}}"
+  sudo_user: "mysql"
