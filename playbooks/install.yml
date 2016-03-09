@@ -3,11 +3,11 @@
   apt: name=apache2 state=present
 - name: Installation de Git
   apt: name=git state=present
-- name: Installation de Maven
-  apt: name=maven state=present
 - name: Ajout du dépôt OpenJDK pour le JDK 8
   apt_repository: repo='ppa:openjdk-r/ppa'
 - name: Installation d'OpenJDK 8
   apt: name=openjdk-8-jdk state=present
 - name: Selection de Java 8 par defaut
-  alternatives: name=java path=/usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java 
+  alternatives: name=java path=/usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java
+- name: Installation de Maven
+  apt: name=maven state=present

@@ -11,9 +11,9 @@
 
   sudo: true
   tasks:
-#    - name: Mise à jour de l'apt cache
-#      apt: update_cache=yes
-#    - include: jenkins.yml
-#    - include: install.yml
-    - include: mysql.yml
-    - include: sonar.yml
+    - name: Mise à jour de l'apt cache
+      apt: update_cache=yes
+    - include: playbooks/install.yml
+    - include: playbooks/jenkins.yml
+    - include: playbooks/mysql.yml
+    - include: playbooks/sonar.yml
