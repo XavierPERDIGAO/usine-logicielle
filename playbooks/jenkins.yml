@@ -18,7 +18,9 @@
   changed_when: false
 - name: Installation des plugins pour Jenkins
   shell: "wget http://localhost:8080/jnlpJars/jenkins-cli.jar && \
-          java -jar jenkins-cli.jar -s http://localhost:8080 install-plugin git && \
-          rm -rf jenkins-cli.jar"
+          java -jar jenkins-cli.jar -s http://localhost:8080 install-plugin git"
+- name: Création du job Jenkins
+  shell: "echo '{{ lookup('file', '../jenkins_config/usine_logicielle_job.xml') }}' | java -jar jenkins-cli.jar -s http://localhost:8080 create-job UsineLogicielle && \
+         rm -rf jenkins-cli.jar"
 - name: Redémarrage de Jenkins
   service: name=jenkins state=restarted
