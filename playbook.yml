@@ -17,3 +17,4 @@
     - include: playbooks/jenkins.yml
     - include: playbooks/mysql.yml
     - include: playbooks/sonar.yml
+    - include: playbooks/tomcat.yml

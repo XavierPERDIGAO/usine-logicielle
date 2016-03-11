@@ -1,0 +1,10 @@
+---
+#Tomcat -- installation et configuration
+- name: Installation de Tomcat7
+  apt: name=tomcat7 state=present
+- name: Installation de Tomcat7-admin
+  apt: name=tomcat7-admin state=present
+- name: Configuration de Tomcat7 
+  script: scripts/config_tomcat.sh
+- name: Redémarrage de Tomcat
+  service: name=tomcat7 state=started enabled=yes
