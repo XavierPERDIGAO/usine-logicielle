@@ -8,6 +8,6 @@
 - name: Installation d'OpenJDK 8
   apt: name=openjdk-8-jdk state=present
 - name: Selection de Java 8 par defaut
-  alternatives: name=java path=/usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java
+  alternatives: name=java path="{{java_home}}/bin/java"
 - name: Installation de Maven
   apt: name=maven state=present

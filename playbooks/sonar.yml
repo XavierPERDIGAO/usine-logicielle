@@ -1,9 +1,6 @@
 ---
-- name: Installation d'unzip
-  apt: name=unzip
- 
 - name: Ajout du groupe sonar
-  group: name="sonar"
+  group: name="{{sonar.group}}"
 
 - name: Ajout de l'utilisateur sonar
   user:
@@ -13,8 +10,13 @@
     shell="/bin/bash"
     comment="Sonar User"
 
+- name: Vérification de la présence de SonarQube
+  stat: path="{{sonar.base_dir}}/{{sonar.name}}"
+  register: sonar_install
+    
 - name: Téléchargement de SonarQube
   get_url: url="http://downloads.sonarsource.com/sonarqube/{{sonar.archive}}" dest="/tmp/{{sonar.archive}}"
+  when: not sonar_install.stat.exists
 
 - name: Creation du home SonaQube
   file:
@@ -22,6 +24,7 @@
     state=directory
     owner="{{sonar.owner}}"
     group="{{sonar.group}}"
+  when: not sonar_install.stat.exists
 
 - name: Extraction de l'archive
   unarchive:
@@ -32,18 +35,20 @@
     copy=no
     creates="{{sonar.base_dir}}/{{sonar.name}}/bin"
   sudo_user: "{{sonar.owner}}"
+  when: not sonar_install.stat.exists
 
-- name: Création d'un lien symbolique sonar
+- name: Création d'un lien symbolique SonaQube
   file:
     src="{{sonar.base_dir}}/{{sonar.name}}"
     dest="{{sonar.base_dir}}/sonar"
     state=link
     owner="{{sonar.owner}}"
     group="{{sonar.group}}"
+  when: not sonar_install.stat.exists
 
 - name: Installation du fichier de configuration de SonarQube
   template:
-    src=sonar.properties.j2
+    src=templates/sonar.properties.j2
     dest="{{sonar.base_dir}}/{{sonar.name}}/conf/sonar.properties"
 
 - name: Installation du script d'init de SonarQube

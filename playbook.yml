@@ -8,6 +8,13 @@
       name: "sonarqube-5.1"
       archive: "sonarqube-5.1.zip"
       jdbc: "sonar"
+    artifactory:
+      owner: "artifactory"
+      group: "artifactory"
+      name: "artifactory"
+      base_dir: "/opt/artifactory"
+      version: "4.6.0"
+    java_home: "/usr/lib/jvm/java-8-openjdk-amd64/jre"
 
   sudo: true
   tasks:
@@ -18,3 +25,4 @@
     - include: playbooks/mysql.yml
     - include: playbooks/sonar.yml
     - include: playbooks/tomcat.yml
+    - include: playbooks/artifactory.yml

@@ -6,7 +6,8 @@
 - name: Mise à jour de l'apt cache
   apt: update_cache=yes
 - name: Installation de Jenkins
-  apt: name=jenkins update_cache=yes
+  apt: name=jenkins force=yes
+
 - name: Démarrage de Jenkins
   service: name=jenkins state=started enabled=yes
 - name: En attente de Jenkins...
@@ -14,13 +15,29 @@
   register: result
   until: result.stdout.find("200 OK") != -1
   retries: 12
-  delay: 5
+  delay: 15
   changed_when: false
+
+- name: Mise à jour du dépôt de plugin de Jenkins
+  shell: "curl -L http://updates.jenkins-ci.org/update-center.json | sed '1d;$d' | curl -X POST -H 'Accept: application/json' -d @- http://localhost:8080/updateCenter/byId/default/postBack"
+- name: Redémarrage de Jenkins
+  service: name=jenkins state=restarted
+- name: En attente de Jenkins...
+  command: curl --head --silent http://localhost:8080/jnlpJars/jenkins-cli.jar/
+  register: result
+  until: result.stdout.find("200 OK") != -1
+  retries: 12
+  delay: 15
+  changed_when: false
+  
+- name: récupération de Jenkins-CLI
+  get_url: url="http://localhost:8080/jnlpJars/jenkins-cli.jar" dest="."
 - name: Installation des plugins pour Jenkins
-  shell: "wget http://localhost:8080/jnlpJars/jenkins-cli.jar && \
-          java -jar jenkins-cli.jar -s http://localhost:8080 install-plugin git"
+  shell: "java -jar jenkins-cli.jar -s http://localhost:8080 install-plugin git"
+- name: Vérification de la présence du Job UsineLogicielle
+  shell: "java -jar jenkins-cli.jar -s http://localhost:8080/ list-jobs"
+  register: jenkins_jobs
 - name: Création du job Jenkins
   shell: "echo '{{ lookup('file', '../jenkins_config/usine_logicielle_job.xml') }}' | java -jar jenkins-cli.jar -s http://localhost:8080 create-job UsineLogicielle && \
          rm -rf jenkins-cli.jar"
-- name: Redémarrage de Jenkins
-  service: name=jenkins state=restarted
+  when: jenkins_jobs.stdout.find("UsineLogicielle") == -1

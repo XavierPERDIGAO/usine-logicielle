@@ -1,0 +1,68 @@
+- name: Ajout du groupe artifactory
+  group: name="{{artifactory.group}}"
+
+- name: Création de l'utilisateur artifactory
+  user:
+    name="{{artifactory.owner}}"
+    group="{{artifactory.group}}"
+    home="{{artifactory.base_dir}}"
+    shell="/bin/false"
+    system="true"
+
+- name: Vérification de la présence d'Artifactory
+  stat: path="{{artifactory.base_dir}}/{{artifactory.name}}/webapps/artifactory.war"
+  register: jarfile
+  
+- name: Vérification de la présence de l'archive
+  stat: path="/tmp/{{artifactory.name}}-{{artifactory.version}}.zip"
+  register: download
+  when: not jarfile.stat.exists
+  
+- name: Téléchargement d'Artifactory
+  get_url:
+    url="https://bintray.com/artifact/download/jfrog/artifactory/jfrog-{{artifactory.name}}-oss-{{artifactory.version}}.zip"
+    dest="/tmp/{{artifactory.name}}-{{artifactory.version}}.zip"
+  retries: 6
+  when: not jarfile.stat.exists and not download.stat.exists
+
+- name: Extraction de l'archive
+  unarchive:
+    src="/tmp/{{artifactory.name}}-{{artifactory.version}}.zip"
+    dest="{{artifactory.base_dir}}"
+    owner="{{artifactory.owner}}"
+    group="{{artifactory.group}}"
+    copy=no
+  sudo_user: "{{artifactory.owner}}"
+  when: not jarfile.stat.exists
+  
+- name: Création d'un lien symbolique Artifactory
+  file:
+    src="{{artifactory.base_dir}}/{{artifactory.name}}-oss-{{artifactory.version}}"
+    dest="{{artifactory.base_dir}}/{{artifactory.name}}"
+    state=link
+    owner="{{artifactory.owner}}"
+    group="{{artifactory.group}}"
+  when: not jarfile.stat.exists
+
+- name: Vérification de l'état d'Artifactory
+  command: curl --head --silent http://localhost:8081
+  register: artifactory_response
+  failed_when: false
+  changed_when: false
+
+- name: Démarrage d'Artifactory
+  shell: "nohup {{artifactory.base_dir}}/{{artifactory.name}}/bin/artifactoryctl start"
+  when: artifactory_response.stdout.find("200 OK") == -1
+  
+- name: En attente d'Artifactory...
+  command: curl --head --silent http://localhost:8081/artifactory/webapp/#/home
+  register: result
+  until: result.stdout.find("200 OK") != -1
+  retries: 12
+  delay: 15
+  changed_when: false
+
+- name: Misz à jour de la configuration sécurité d'Artifactory
+  shell: "curl -u admin:password -X GET -H 'Accept: application/xml' http://localhost:8081/artifactory/api/system/security | \
+          sed -r 's/<mask>1/<mask>7/g' | \
+          curl -u admin:password -X POST -H 'Content-Type: application/xml' -d @- http://localhost:8081/artifactory/api/system/security"
