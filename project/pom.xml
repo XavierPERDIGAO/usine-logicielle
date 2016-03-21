@@ -7,11 +7,13 @@
     <groupId>fr.esiee.usineLogicielle</groupId>
     <artifactId>usineLogicielle</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <packaging>war</packaging>
 
     <properties>
         <spark.version>2.3</spark.version>
         <junit.version>4.12</junit.version>
+        <jQuery.version>2.2.1</jQuery.version>
+        <bootstrap.version>3.3.6</bootstrap.version>
         <mavenExec.version>1.2.1</mavenExec.version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -49,13 +51,13 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
+                <artifactId>maven-war-plugin</artifactId>
                 <executions>
                     <execution>
                         <id>UsineLogicielle</id>
                         <phase>package</phase>
                         <goals>
-                            <goal>single</goal>
+                            <goal>war</goal>
                         </goals>
                         <configuration>
                             <archive>
@@ -63,9 +65,6 @@
                                     <mainClass>fr.esiee.usineLogicielle.Main</mainClass>
                                 </manifest>
                             </archive>
-                            <descriptorRefs>
-                                <descriptorRef>jar-with-dependencies</descriptorRef>
-                            </descriptorRefs>
                         </configuration>
                     </execution>
                 </executions>
