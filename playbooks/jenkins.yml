@@ -20,8 +20,13 @@
 
 - name: Mise à jour du dépôt de plugin de Jenkins
   shell: "curl -L http://updates.jenkins-ci.org/update-center.json | sed '1d;$d' | curl -X POST -H 'Accept: application/json' -d @- http://localhost:8080/updateCenter/byId/default/postBack"
+- name: Configuration de Maven pour Jenkins
+  template:
+    src=jenkins_config/maven_configuration.xml
+    dest="/var/lib/jenkins/hudson.tasks.Maven.xml"
 - name: Redémarrage de Jenkins
   service: name=jenkins state=restarted
+
 - name: En attente de Jenkins...
   command: curl --head --silent http://localhost:8080/jnlpJars/jenkins-cli.jar/
   register: result
@@ -34,9 +39,22 @@
   get_url: url="http://localhost:8080/jnlpJars/jenkins-cli.jar" dest="."
 - name: Installation des plugins pour Jenkins
   shell: "java -jar jenkins-cli.jar -s http://localhost:8080 install-plugin git"
+- name: Redémarrage de Jenkins
+  service: name=jenkins state=restarted
+
+- name: En attente de Jenkins...
+  command: curl --head --silent http://localhost:8080/jnlpJars/jenkins-cli.jar/
+  register: result
+  until: result.stdout.find("200 OK") != -1
+  retries: 12
+  delay: 15
+  changed_when: false
+
 - name: Vérification de la présence du Job UsineLogicielle
   shell: "java -jar jenkins-cli.jar -s http://localhost:8080/ list-jobs"
   register: jenkins_jobs
+  changed_when: false
+
 - name: Création du job Jenkins
   shell: "echo '{{ lookup('file', '../jenkins_config/usine_logicielle_job.xml') }}' | java -jar jenkins-cli.jar -s http://localhost:8080 create-job UsineLogicielle && \
          rm -rf jenkins-cli.jar"
