@@ -1,0 +1,25 @@
+---
+- name: Installation d'Apache2 
+  apt: name={{item}} state=present
+  with_items:
+   - apache2
+   - libapache2-mod-proxy-html
+   - libxml2-dev
+- name: Activation de mod_proxy
+  command: "a2enmod {{item}}"
+  with_items:
+   - proxy
+   - proxy_ajp
+   - proxy_http
+   - rewrite
+   - deflate
+   - headers
+   - proxy_balancer
+   - proxy_connect
+   - proxy_html
+- name: Configuration du reverse proxy d'Apache2
+  template:
+    src=templates/apache_sites.conf.j2
+    dest=/etc/apache2/sites-enabled/000-default.conf
+- name: Redémarrage d'Apache2
+  service: name=apache2 state=restarted

@@ -21,6 +21,7 @@
     - name: Mise à jour de l'apt cache
       apt: update_cache=yes
     - include: playbooks/install.yml
+    - include: playbooks/apache.yml
     - include: playbooks/jenkins.yml
     - include: playbooks/mysql.yml
     - include: playbooks/sonar.yml

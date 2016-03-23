@@ -1,0 +1,34 @@
+<VirtualHost *:80>
+        ProxyRequests Off
+        ProxyPreserveHost On
+        ServerName localhost
+        
+        ProxyPass /jenkins http://0.0.0.0:8080/jenkins
+        ProxyPassReverse /jenkins http://0.0.0.0:8080/jenkins
+        
+        ProxyPass /artifactory http://0.0.0.0:8081/artifactory
+        ProxyPassReverse /artifactory http://0.0.0.0:8081/artifactory
+        
+        ProxyPass /sonar http://0.0.0.0:9000/sonar
+        ProxyPassReverse /sonar http://0.0.0.0:9000/sonar
+        
+        ProxyPass /tomcat http://0.0.0.0:9020/
+        ProxyPassReverse /tomcat http://0.0.0.0:9020/
+        
+        <Proxy>
+            Order Allow,Deny
+            Allow from all
+        </Proxy>
+        
+        ServerAdmin webmaster@localhost
+        DocumentRoot /var/www/html
+
+        # Available loglevels: trace8, ..., trace1, debug, info, notice, warn,
+        # error, crit, alert, emerg.
+        # It is also possible to configure the loglevel for particular
+        # modules, e.g.
+        #LogLevel info ssl:warn
+
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>

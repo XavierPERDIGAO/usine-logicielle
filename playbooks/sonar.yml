@@ -15,7 +15,11 @@
   register: sonar_install
     
 - name: Téléchargement de SonarQube
-  get_url: url="http://downloads.sonarsource.com/sonarqube/{{sonar.archive}}" dest="/tmp/{{sonar.archive}}"
+  get_url: 
+    url="http://downloads.sonarsource.com/sonarqube/{{sonar.archive}}"
+    dest="/tmp/{{sonar.archive}}"
+    timeout=60
+  retries: 6
   when: not sonar_install.stat.exists
 
 - name: Creation du home SonaQube

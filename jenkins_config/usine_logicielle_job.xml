@@ -35,7 +35,7 @@
     <artifactId>usineLogicielle</artifactId>
   </rootModule>
   <rootPOM>project/pom.xml</rootPOM>
-  <goals>clean install sonar:sonar</goals>
+  <goals>clean install deploy sonar:sonar</goals>
   <aggregatorStyleBuild>true</aggregatorStyleBuild>
   <incrementalBuild>false</incrementalBuild>
   <ignoreUpstremChanges>false</ignoreUpstremChanges>

@@ -62,7 +62,7 @@
   delay: 15
   changed_when: false
 
-- name: Misz à jour de la configuration sécurité d'Artifactory
+- name: Mise à jour de la configuration sécurité d'Artifactory
   shell: "curl -u admin:password -X GET -H 'Accept: application/xml' http://localhost:8081/artifactory/api/system/security | \
           sed -r 's/<mask>1/<mask>7/g' | \
           curl -u admin:password -X POST -H 'Content-Type: application/xml' -d @- http://localhost:8081/artifactory/api/system/security"
