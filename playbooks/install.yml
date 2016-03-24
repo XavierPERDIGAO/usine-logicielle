@@ -1,6 +1,4 @@
 ---
-- name: Installation d'Apache2 
-  apt: name=apache2 state=present
 - name: Installation de Git
   apt: name=git state=present
 - name: Ajout du dépôt OpenJDK pour le JDK 8
