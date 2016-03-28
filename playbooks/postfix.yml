@@ -1,14 +1,12 @@
 ---
 - name: Installation de Postfix
-  apt: name=postfix state=present
-- name: Installation dependance de Postfix - mailutils
-  apt: name=mailutils state=present
-- name: Installation dependance de Postfix - libsasl2-2
-  apt: name=libsasl2-2 state=present
-- name: Installation dependance de Postfix - ca-certificates
-  apt: name=ca-certificates state=present
-- name: Installation dependance de Postfix - libsasl2-modules
-  apt: name=libsasl2-modules state=present
+  apt: name={{item}} state=present
+  with_items:
+    - postfix
+    - mailutils
+    - libsasl2-2
+    - ca-certificates
+    - libsasl2-modules
   
 - name: Transfert de certificat Thawte Premium Server CA
   copy: src=fichiers/mail/Thawte_Premium_Server_CA.pem dest=/etc/ssl/certs/Thawte_Premium_Server_CA.pem
