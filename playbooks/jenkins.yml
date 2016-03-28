@@ -7,6 +7,9 @@
   apt: update_cache=yes
 - name: Installation de Jenkins
   apt: name=jenkins force=yes
+  
+- name: Arrêt de Jenkins
+  service: name=jenkins state=stopped enabled=yes
 
 - name: Configuration de Jenkins
   lineinfile:
@@ -29,7 +32,7 @@
   shell: "curl -L http://updates.jenkins-ci.org/update-center.json | sed '1d;$d' | curl -X POST -H 'Accept: application/json' -d @- http://localhost:8080/updateCenter/byId/default/postBack"
 - name: Configuration de Maven pour Jenkins
   template:
-    src=jenkins_config/maven_configuration.xml
+    src=config_files/jenkins/maven_configuration.xml
     dest="/var/lib/jenkins/hudson.tasks.Maven.xml"
 - name: Redémarrage de Jenkins
   service: name=jenkins state=restarted
@@ -63,6 +66,6 @@
   changed_when: false
 
 - name: Création du job Jenkins
-  shell: "echo '{{ lookup('file', '../jenkins_config/usine_logicielle_job.xml') }}' | java -jar jenkins-cli.jar -s http://localhost:8080/jenkins create-job UsineLogicielle && \
+  shell: "echo '{{ lookup('file', '../config_files/jenkins/usine_logicielle_job.xml') }}' | java -jar jenkins-cli.jar -s http://localhost:8080/jenkins create-job UsineLogicielle && \
          rm -rf jenkins-cli.jar"
   when: jenkins_jobs.stdout.find("UsineLogicielle") == -1

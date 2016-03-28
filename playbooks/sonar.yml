@@ -52,7 +52,7 @@
 
 - name: Installation du fichier de configuration de SonarQube
   template:
-    src=templates/sonar.properties.j2
+    src=config_files/templates/sonar.properties.j2
     dest="{{sonar.base_dir}}/{{sonar.name}}/conf/sonar.properties"
 
 - name: Installation du script d'init de SonarQube
