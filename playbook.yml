@@ -27,3 +27,4 @@
     - include: playbooks/sonar.yml
     - include: playbooks/tomcat.yml
     - include: playbooks/artifactory.yml
+    - include: playbooks/postfix.yml

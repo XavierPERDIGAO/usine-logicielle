@@ -1,0 +1,26 @@
+---
+- name: Installation de Postfix
+  apt: name={{item}} state=present
+  with_items:
+    - postfix
+    - mailutils
+    - libsasl2-2
+    - ca-certificates
+    - libsasl2-modules
+  
+- name: Transfert de certificat Thawte Premium Server CA
+  copy: src=config_files/mail/Thawte_Premium_Server_CA.pem dest=/etc/ssl/certs/Thawte_Premium_Server_CA.pem
+- name: Transfert de fichier de configuration Postfix pour relai vers gmail
+  copy: src=config_files/mail/main.cf dest=/etc/postfix/main.cf
+- name: Transfert de fichier de configuration Postfix pour envoie des donnees de compte
+  copy: src=config_files/mail/sasl_passwd dest=/etc/postfix/sasl/sasl_passwd
+  
+- name: Commandes shell de configuration Postfix
+  shell: " cat /etc/ssl/certs/Thawte_Premium_Server_CA.pem | sudo tee -a /etc/postfix/cacert.pem && \
+           chmod 400 /etc/postfix/sasl/sasl_passwd && \
+           postmap /etc/postfix/sasl/sasl_passwd && \
+           chown postfix /etc/postfix/sasl/sasl_passwd
+          "
+          
+- name: Relancer Postfix
+  service: name=postfix state=restarted
