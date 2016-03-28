@@ -5,7 +5,13 @@
   with_items:
     - tomcat7
     - tomcat7-admin
-- name: Configuration de Tomcat7 
-  script: scripts/config_tomcat.sh
+  
+- name: Modification du fichier /var/lib/tomcat7/conf/server.xml
+  copy: src=fichiers/tomcat/server.xml dest=/var/lib/tomcat7/conf/server.xml
+- name: Modification du fichier /etc/default/tomcat7
+  copy: src=fichiers/tomcat/tomcat7 dest=/etc/default/tomcat7
+- name: Modification du fichier /etc/tomcat7/tomcat-users.xml
+  copy: src=fichiers/tomcat/tomcat-users.xml dest=/etc/tomcat7/tomcat-users.xml
+  
 - name: Redémarrage de Tomcat
   service: name=tomcat7 state=started enabled=yes
