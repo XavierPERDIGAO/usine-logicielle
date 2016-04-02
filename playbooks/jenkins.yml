@@ -2,7 +2,7 @@
 - name: Ajout de la clef APT Jenkins 
   apt_key: url=https://jenkins-ci.org/debian/jenkins-ci.org.key
 - name: Ajout du dépôt Jenkins dans les sources
-  shell: "echo deb http://pkg.jenkins-ci.org/debian binary/ > /etc/apt/sources.list.d/jenkins.list"
+  apt_repository: repo="deb http://pkg.jenkins-ci.org/debian binary/" state=present
 - name: Mise à jour de l'apt cache
   apt: update_cache=yes
 - name: Installation de Jenkins
