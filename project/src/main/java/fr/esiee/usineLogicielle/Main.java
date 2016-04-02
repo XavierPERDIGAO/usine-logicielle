@@ -1,6 +1,7 @@
 package fr.esiee.usineLogicielle;
 
 import spark.ModelAndView;
+import spark.servlet.SparkApplication;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 
 import java.util.HashMap;
@@ -10,10 +11,18 @@ import static spark.Spark.externalStaticFileLocation;
 import static spark.Spark.get;
 import static spark.Spark.staticFileLocation;
 
-public class Main {
-    private static HandlebarsTemplateEngine templateEngine = new HandlebarsTemplateEngine();
+public class Main implements SparkApplication {
+    private HandlebarsTemplateEngine templateEngine = new HandlebarsTemplateEngine();
 
-    public static void main(String[] args) {
+    public static void main(String[] args)
+    {
+        SparkApplication application = new Main();
+        application.init();
+    }
+
+    @Override
+    public void init()
+    {
         staticFileLocation("/static");
 
         Map<String, String> templateVariables = new HashMap<>();

@@ -38,7 +38,7 @@ var Application = {
             }
 
             var template;
-            var url = '/templates/' + this.templateName + '_tpl.hbs';
+            var url = 'templates/' + this.templateName + '_tpl.hbs';
             var self = this;
 
             $.ajax({
