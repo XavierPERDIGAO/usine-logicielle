@@ -2,20 +2,26 @@ package fr.esiee.usineLogicielle;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+
 public class TasksService 
 {
-	Properties options = new Properties();
-	String url = "jdbc:mysql://127.0.0.1:3306/Tasks?user=root&password=El/fuerte31";
+	String url = "jdbc:mysql://127.0.0.1:3306/Tasks";
+	String user = "root";
+	String password = "El/fuerte31";
 	
-	public TasksService()
+	public TasksService() {}
+	public TasksService(String url, String user, String password) 
 	{
-		options.put("driver", "com.mysql.jdbc.Driver");
+		this.url = url;
+		this.user = user;
+		this.password = password;
 	}
 	
 	public List<Task> getTaskList()
@@ -26,7 +32,7 @@ public class TasksService
 		
 		try
 		{
-			connection = DriverManager.getConnection(url);
+			connection = DriverManager.getConnection(url, user, password);
 			state = connection.createStatement();
 			String query = "SELECT * FROM Task";
 			ResultSet result = state.executeQuery(query);
@@ -60,7 +66,7 @@ public class TasksService
 		
 		try
 		{
-			connection = DriverManager.getConnection(url);
+			connection = DriverManager.getConnection(url, user, password);
 			state = connection.createStatement();
 			String query = "SELECT * FROM Task WHERE id = " + idTask + ";";
 			ResultSet result = state.executeQuery(query);
@@ -89,18 +95,28 @@ public class TasksService
 	}
 	
 	public int addTask(Task newTask)
-	{		
+	{
+		if (newTask == null)
+			return -1;
+		
 		Connection connection = null;
-		Statement state = null;
+		PreparedStatement state = null;
 		
 		try
 		{
-			connection = DriverManager.getConnection(url);
-			state = connection.createStatement();
-			String query = "INSERT INTO Task(title, body) VALUES ('" + newTask.title + "','" + newTask.body +"')";
-			int result = state.executeUpdate(query);
+			connection = DriverManager.getConnection(url, user, password);
+			String query = "INSERT INTO Task(title, body) VALUES (?, ?);";
+			state = connection.prepareStatement(query);
+			state.setString(1, newTask.title);
+			state.setString(2, newTask.body);
+			int result = state.executeUpdate();
 			if (result == Statement.EXECUTE_FAILED)
+			{
 				System.out.println("erreur BDD");
+				state.close();
+				connection.close();
+				return -1;
+			}
 			state.close();
 			connection.close();
 			return 0;
@@ -114,17 +130,30 @@ public class TasksService
 	
 	public int editTask(Task modifiedTask)
 	{
+		if (modifiedTask == null)
+			return -1;
+		
 		Connection connection = null;
-		Statement state = null;
+		PreparedStatement state = null;
 		
 		try
 		{
-			connection = DriverManager.getConnection(url);
-			state = connection.createStatement();
-			String query = "UPDATE Task SET title = '" + modifiedTask.title + "', body = '" + modifiedTask.body + "' WHERE id = " + modifiedTask.id + ";";
-			int result = state.executeUpdate(query);
+			connection = DriverManager.getConnection(url, user, password);
+			
+			String query = "UPDATE Task SET title = ?, body = ? WHERE id = ?;";
+			state = connection.prepareStatement(query);
+			state.setString(1, modifiedTask.title);
+			state.setString(2, modifiedTask.body);
+			state.setLong(3, modifiedTask.id);
+			
+			int result = state.executeUpdate();
 			if (result == Statement.EXECUTE_FAILED)
+			{
 				System.out.println("erreur BDD");
+				state.close();
+				connection.close();
+				return -1;
+			}
 			state.close();
 			connection.close();
 			return 0;
@@ -143,12 +172,17 @@ public class TasksService
 		
 		try
 		{
-			connection = DriverManager.getConnection(url);
+			connection = DriverManager.getConnection(url, user, password);
 			state = connection.createStatement();
 			String query = "DELETE FROM Task WHERE id = " + idTask + ";";
 			int result = state.executeUpdate(query);
 			if (result == Statement.EXECUTE_FAILED)
+			{
 				System.out.println("erreur BDD");
+				state.close();
+				connection.close();
+				return -1;
+			}
 			state.close();
 			connection.close();
 			return 0;
