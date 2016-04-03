@@ -1,19 +1,12 @@
 package fr.esiee.usineLogicielle;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
-
-import org.apache.spark.api.java.JavaSparkContext;
-import org.apache.spark.sql.DataFrame;
-import org.apache.spark.sql.Row;
-import org.apache.spark.sql.SQLContext;
-import org.apache.spark.sql.SaveMode;
-import org.apache.spark.sql.execution.QueryExecution;
 
 public class TasksService 
 {
@@ -27,20 +20,32 @@ public class TasksService
 	
 	public List<Task> getTaskList()
 	{
-		JavaSparkContext sc = Main.getSparkContext();
-		SQLContext sqlContext = new SQLContext(sc);
-		
-		DataFrame df = sqlContext.read().jdbc(url, "Task", options);
-		List<Row> rows = df.collectAsList();
+		Connection connection = null;
+		Statement state = null;
 		List<Task> tasks = new ArrayList<Task>();
 		
-		for (Row row : rows)
+		try
 		{
-			Task task = new Task();
-			task.id = row.getLong(0);
-			task.title = row.getString(1);
-			task.body = row.getString(2);
-			tasks.add(task);
+			connection = DriverManager.getConnection(url);
+			state = connection.createStatement();
+			String query = "SELECT * FROM Task";
+			ResultSet result = state.executeQuery(query);
+			
+		    while(result.next())
+		    {
+		    	Task t = new Task();
+				t.id = result.getInt(1);
+				t.title = result.getString(2);
+				t.body = result.getString(3);
+				tasks.add(t);
+		    }
+			
+			state.close();
+			connection.close();
+		}
+		catch (Exception e)
+		{
+			System.out.println(e.getMessage());
 		}
 		
 		return tasks;
@@ -48,48 +53,110 @@ public class TasksService
 	
 	public Task getTaskByID(int idTask)
 	{
-		JavaSparkContext sc = Main.getSparkContext();
-		SQLContext sqlContext = new SQLContext(sc);
+		Connection connection = null;
+		Statement state = null;
+		Task t = null;
+		int numberOfTasks = 0;
 		
-		DataFrame df = sqlContext.read().jdbc(url, "Task", options);
-		Row row = df.filter(df.col("id").eqNullSafe(1)).first();
+		try
+		{
+			connection = DriverManager.getConnection(url);
+			state = connection.createStatement();
+			String query = "SELECT * FROM Task WHERE id = " + idTask + ";";
+			ResultSet result = state.executeQuery(query);
+			
+		    while(result.next())
+		    {
+		    	t = new Task();
+				t.id = result.getInt(1);
+				t.title = result.getString(2);
+				t.body = result.getString(3);
+				numberOfTasks++;
+		    }
+			
+			state.close();
+			connection.close();
+			
+			if (numberOfTasks > 1)
+				throw new Exception("Erreur : plusieurs taches trouvées pour cet indice");
+		}
+		catch (Exception e)
+		{
+			System.out.println(e.getMessage());
+		}	
 		
-		Task task = new Task();
-		task.id = row.getLong(0);
-		task.title = row.getString(1);
-		task.body = row.getString(2);
-		return task;	
+		return t;
 	}
 	
-	public void addTask(Task newTask)
-	{
-		//permet les injections SQL
-		JavaSparkContext sc = Main.getSparkContext();
-		SQLContext sqlContext = new SQLContext(sc);
+	public int addTask(Task newTask)
+	{		
+		Connection connection = null;
+		Statement state = null;
 		
-		List<Task> temp = new ArrayList<Task>();
-		temp.add(newTask);
-		DataFrame df = sqlContext.createDataFrame(temp, Task.class);
-		
-		df.write().mode(SaveMode.Append).jdbc(url, "Task", options);//executeSql("INSERT INTO Task VALUES('" + newTask.title + "','" + newTask.body + "');");
+		try
+		{
+			connection = DriverManager.getConnection(url);
+			state = connection.createStatement();
+			String query = "INSERT INTO Task(title, body) VALUES ('" + newTask.title + "','" + newTask.body +"')";
+			int result = state.executeUpdate(query);
+			if (result == Statement.EXECUTE_FAILED)
+				System.out.println("erreur BDD");
+			state.close();
+			connection.close();
+			return 0;
+		}
+		catch (Exception e)
+		{
+			System.out.println(e.getMessage());
+			return -1;
+		}
 	}
 	
-	public void editTask(Task modifiedTask)
+	public int editTask(Task modifiedTask)
 	{
-		//permet les injections SQL
-		JavaSparkContext sc = Main.getSparkContext();
-		SQLContext sqlContext = new SQLContext(sc);
-		sqlContext.setConf(options);
+		Connection connection = null;
+		Statement state = null;
 		
-		sqlContext.executeSql("UPDATE Task SET title = '" + modifiedTask.title + "', body = '" + modifiedTask.body + "' WHERE id = " + modifiedTask.id + ";");
+		try
+		{
+			connection = DriverManager.getConnection(url);
+			state = connection.createStatement();
+			String query = "UPDATE Task SET title = '" + modifiedTask.title + "', body = '" + modifiedTask.body + "' WHERE id = " + modifiedTask.id + ";";
+			int result = state.executeUpdate(query);
+			if (result == Statement.EXECUTE_FAILED)
+				System.out.println("erreur BDD");
+			state.close();
+			connection.close();
+			return 0;
+		}
+		catch (Exception e)
+		{
+			System.out.println(e.getMessage());
+			return -1;
+		}
 	}
 	
-	public void deleteTask(int idTask)
+	public int deleteTask(int idTask)
 	{
-		JavaSparkContext sc = Main.getSparkContext();
-		SQLContext sqlContext = new SQLContext(sc);
-		sqlContext.setConf(options);
+		Connection connection = null;
+		Statement state = null;
 		
-		sqlContext.executeSql("DELETE FROM Task WHERE id = " + idTask + ";");
+		try
+		{
+			connection = DriverManager.getConnection(url);
+			state = connection.createStatement();
+			String query = "DELETE FROM Task WHERE id = " + idTask + ";";
+			int result = state.executeUpdate(query);
+			if (result == Statement.EXECUTE_FAILED)
+				System.out.println("erreur BDD");
+			state.close();
+			connection.close();
+			return 0;
+		}
+		catch (Exception e)
+		{
+			System.out.println(e.getMessage());
+			return -1;
+		}
 	}
 }

@@ -10,7 +10,6 @@ import java.util.Map;
 import static spark.Spark.get;
 import static spark.Spark.staticFileLocation;
 
-
 public class Main implements SparkApplication 
 {
     private HandlebarsTemplateEngine templateEngine = new HandlebarsTemplateEngine();
