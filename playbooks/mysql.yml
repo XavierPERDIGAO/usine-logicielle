@@ -66,4 +66,22 @@
     name=Tasks
     state=import
     target="/tmp/createTask.sql"
+    
+- name: Création de la BDD de test du projet LaravelTasks
+  mysql_db: 
+    login_password=root
+    login_user=root
+    name=TasksTest
+    state=present
+
+- name: Transfert du fichier sql de creation de la table Task
+  copy: src=config_files/SQL/createTaskTest.sql dest=/tmp/createTaskTest.sql
+  
+- name: Création de la Table Task de la BDD de test
+  mysql_db: 
+    login_password=root
+    login_user=root
+    name=TasksTest
+    state=import
+    target="/tmp/createTaskTest.sql"
  
