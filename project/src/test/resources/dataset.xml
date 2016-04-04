@@ -1,0 +1,5 @@
+<dataset>
+	<Task id="1" title="Tache1 : Test" body="Ceci est le premier test" />
+	<Task id="2" title="Tache2 : Test" body="Ceci est le deuxième test" />
+	<Task id="3" title="Tache3 : Test" body="Ceci est le troisième test" />
+</dataset>
