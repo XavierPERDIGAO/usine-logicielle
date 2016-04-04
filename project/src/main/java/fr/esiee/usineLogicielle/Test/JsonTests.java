@@ -7,8 +7,17 @@ import org.junit.Test;
 import fr.esiee.usineLogicielle.JsonUtil;
 import fr.esiee.usineLogicielle.Task;
 
+/**
+ * Test sur la classe JsonUtil
+ * 
+ * @author perdigao
+ *
+ */
 public class JsonTests {
 
+	/**
+	 * test si l'appli peut récupérer une tache codée en Json.
+	 */
 	@Test
 	public void fromJsonTest() 
 	{
@@ -19,6 +28,9 @@ public class JsonTests {
 		assertEquals("Ceci est un test1", t.body);
 	}
 	
+	/**
+	 * test si l'appli peut décoder un objet en format Json.
+	 */
 	@Test
 	public void toJsonTest() 
 	{

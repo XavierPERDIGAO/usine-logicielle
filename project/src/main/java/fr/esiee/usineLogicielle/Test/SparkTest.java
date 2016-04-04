@@ -10,15 +10,11 @@ import org.easymock.EasyMockRule;
 import org.easymock.EasyMockSupport;
 import org.easymock.Mock;
 import org.easymock.TestSubject;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 
 import spark.Request;
 import spark.Response;
-import spark.Spark;
-import fr.esiee.usineLogicielle.Main;
 import fr.esiee.usineLogicielle.Task;
 import fr.esiee.usineLogicielle.TasksService;
 import fr.esiee.usineLogicielle.Routes.DeleteTaskRoute;
@@ -27,47 +23,74 @@ import fr.esiee.usineLogicielle.Routes.GetTasksListRoute;
 import fr.esiee.usineLogicielle.Routes.PostAddTaskRoute;
 import fr.esiee.usineLogicielle.Routes.PutTaskEditRoute;
 
+/**
+ * Test sur les routes du projet.
+ * Utilisation de mock avec EasyMock
+ * 
+ * @author perdigao
+ *
+ */
 public class SparkTest extends EasyMockSupport
 {
-	@BeforeClass
-	public static void beforeClass()
-	{
-		Main.main(null);
-	}
-	
-	@AfterClass
-	public static void afterClass()
-	{
-		Spark.stop();	
-	}
-	
+	/**
+	 * Variable permettant d'utiliser EasyMock.
+	 */
 	@Rule
 	public EasyMockRule rule = new EasyMockRule(this);
 	
+	/**
+	 * Mock de la classe modèle du back-end.
+	 */
 	@Mock
 	private TasksService model;
 	
+	/**
+	 * Mock de la requête HTTP
+	 */
 	@Mock
 	private Request request;
 	
+	/**
+	 * Mock de la réponse HTTP
+	 */
 	@Mock
 	private Response response;
 	
+	/**
+	 * Route de suppression d'une tache.
+	 */
 	@TestSubject
 	private final DeleteTaskRoute deleteTaskRoute = new DeleteTaskRoute(model);
 	
+	/**
+	 * Route de modification d'une tache.
+	 */
 	@TestSubject
 	private final PutTaskEditRoute editTaskRoute = new PutTaskEditRoute(model);
 	
+	/**
+	 * Route d'ajout d'une tache en mémoire.
+	 */
 	@TestSubject
 	private final PostAddTaskRoute addTaskRoute = new PostAddTaskRoute(model);
 	
+	/**
+	 * Route de récupération d'une tache précise en mémoire.
+	 */
 	@TestSubject
 	private final GetTaskViewRoute getTaskRoute = new GetTaskViewRoute(model);
 	
+	/**
+	 * Route de récupération de la liste de toutes les taches en mémoire.
+	 */
 	@TestSubject
 	private final GetTasksListRoute getTaskListRoute = new GetTasksListRoute(model);
 	
+	/**
+	 * Test qui vérifie que la route renvoie "ok" si la suppression s'est déroulée correctement.
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void deleteTaskRouteTest1() throws Exception
 	{
@@ -83,6 +106,11 @@ public class SparkTest extends EasyMockSupport
 		verifyAll();
 	}
 	
+	/**
+	 * Test qui vérifie que la route renvoie "erreur" si la suppression s'est mal passée.
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void deleteTaskRouteTest2() throws Exception
 	{
@@ -98,6 +126,11 @@ public class SparkTest extends EasyMockSupport
 		verifyAll();
 	}
 	
+	/**
+	 * Test qui vérifie que la route renvoie "ok" si la modification d'une tache s'est déroulée correctement.
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void editTaskRouteTest1() throws Exception
 	{
@@ -112,6 +145,11 @@ public class SparkTest extends EasyMockSupport
 		verifyAll();
 	}
 	
+	/**
+	 * Test qui vérifie que la route renvoie "erreur" si la modification d'une tache s'est mal passée.
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void editTaskRouteTest2() throws Exception
 	{
@@ -126,6 +164,12 @@ public class SparkTest extends EasyMockSupport
 		verifyAll();
 	}
 	
+	/**
+	 * Test qui vérifie si les valeurs récupérées en entrée sont bien en Json.
+	 * Si ce n'est pas le cas, le programme renvoie "La tache envoyée est dans un format json incorrect"
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void editTaskRouteTest3() throws Exception
 	{
@@ -138,6 +182,11 @@ public class SparkTest extends EasyMockSupport
 		assertEquals("La tache envoyée est dans un format json incorrect", response);
 	}
 		
+	/**
+	 * Test qui vérifie que la route renvoie "ok" si l'ajoue d'une tache s'est déroulée correctement.
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void addTaskRouteTest1() throws Exception
 	{
@@ -152,6 +201,11 @@ public class SparkTest extends EasyMockSupport
 		verifyAll();
 	}
 	
+	/**
+	 * Test qui vérifie que la route renvoie "erreur" si l'ajoue d'une tache s'est mal passée.
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void addTaskRouteTest2() throws Exception
 	{
@@ -166,6 +220,12 @@ public class SparkTest extends EasyMockSupport
 		verifyAll();
 	}
 	
+	/**
+	 * Test qui vérifie si les valeurs récupérées en entrée sont bien en Json.
+	 * Si ce n'est pas le cas, le programme renvoie "La tache envoyée est dans un format json incorrect"
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void addTaskRouteTest3() throws Exception
 	{
@@ -178,6 +238,10 @@ public class SparkTest extends EasyMockSupport
 		assertEquals("La tache envoyée est dans un format json incorrect", response);
 	}
 	
+	/**
+	 * Test qui vérifie que la route renvoie bien une tache avec les bonnes valeurs.
+	 * @throws Exception
+	 */
 	@Test
 	public void getTaskRouteTest1() throws Exception
 	{
@@ -199,6 +263,10 @@ public class SparkTest extends EasyMockSupport
 		verifyAll();
 	}
 	
+	/**
+	 * Test qui vérifie que la route renvoie "There is no task with id % found" si la tache n'a pas été trouvée en mémoire.
+	 * @throws Exception
+	 */
 	@Test
 	public void getTaskRouteTest2() throws Exception
 	{	
@@ -214,6 +282,10 @@ public class SparkTest extends EasyMockSupport
 		verifyAll();
 	}
 	
+	/**
+	 * Test qui vérifie si l'id de la tache envoyée par l'utilisateur est bien un entier, sinon la route renvoie "l'identifiant n'est pas un entier".
+	 * @throws Exception
+	 */
 	@Test
 	public void getTaskRouteTest3() throws Exception
 	{
@@ -226,6 +298,11 @@ public class SparkTest extends EasyMockSupport
 		assertEquals("l'identifiant n'est pas un entier", response);
 	}
 	
+	/**
+	 * Test qui vérifie que la route renvoie null si la liste des taches n'est pas initialisée.
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void getTaskListRouteTest1() throws Exception
 	{	
@@ -239,12 +316,18 @@ public class SparkTest extends EasyMockSupport
 		verifyAll();
 	}
 	
+	/**
+	 * Test qui vérifie que la route renvoie une liste vide si la BDD ne contient pas de tache.
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void getTaskListRouteTest2() throws Exception
 	{
 		EasyMock.expect(model.getTaskList()).andReturn(new ArrayList<Task>());
 		replayAll();
 		
+		@SuppressWarnings("unchecked")
 		List<Task> response = (List<Task>) getTaskListRoute.handle(null, null);
 
 		assertEquals(0, response.size());
@@ -252,6 +335,10 @@ public class SparkTest extends EasyMockSupport
 		verifyAll();
 	}
 	
+	/**
+	 * Test qui vérifie que la route renvoie bien la liste de toutes les taches présentes en BDD.
+	 * @throws Exception
+	 */
 	@Test
 	public void getTaskListRouteTest3() throws Exception
 	{
@@ -262,6 +349,7 @@ public class SparkTest extends EasyMockSupport
 		EasyMock.expect(model.getTaskList()).andReturn(returnedByMock);
 		replayAll();
 		
+		@SuppressWarnings("unchecked")
 		List<Task> response = (List<Task>) getTaskListRoute.handle(null, null);
 
 		assertEquals(2, response.size());

@@ -7,16 +7,38 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 
 public class TasksService 
 {
+	/**
+	 * L'url d'appel à la base de données MySQL
+	 */
 	String url = "jdbc:mysql://127.0.0.1:3306/Tasks";
-	String user = "root";
-	String password = "El/fuerte31";
 	
+	/**
+	 * L'id de l'utilisateur MySQL
+	 */
+	String user = "root";
+	
+	/**
+	 * Le mot de passe de l'utilisateur MySQL
+	 */
+	String password = "root";
+	
+	/**
+	 * Constructeur vide, appelle les paramètres MySQL par défaut
+	 */
 	public TasksService() {}
+	
+	/**
+	 * Constructeur permettant d'entrer les paramètres MySQL
+	 * Utilisé dans les Tests Unitaires de cette classe pour ouvrir la BDD de test.
+	 * 
+	 * @param url l'url de la base de données à ouvrir en MySQL
+	 * @param user l'id de l'utilisateur MySQL
+	 * @param password le password de l'utilisateur MySQL
+	 */
 	public TasksService(String url, String user, String password) 
 	{
 		this.url = url;
@@ -24,6 +46,11 @@ public class TasksService
 		this.password = password;
 	}
 	
+	/**
+	 * Fonction qui ouvre la base de données et récupère la liste de toutes les taches en mémoire.
+	 * 
+	 * @return la liste des taches sauvegardées en BDD.
+	 */
 	public List<Task> getTaskList()
 	{
 		Connection connection = null;
@@ -57,6 +84,12 @@ public class TasksService
 		return tasks;
 	}
 	
+	/**
+	 * Récupère dans la BDD une tache précise en fournissant l'id de la tache à récupérer.
+	 * 
+	 * @param idTask l'id de la tache a récupérer.
+	 * @return la tache souhaitée.
+	 */
 	public Task getTaskByID(int idTask)
 	{
 		Connection connection = null;
@@ -94,6 +127,13 @@ public class TasksService
 		return t;
 	}
 	
+	/**
+	 * Ajouter une tache dans la base de données.
+	 * l'id de la tache à sauvegarder n'est pas prise en compte.
+	 * 
+	 * @param newTask la tache à sauvegarder
+	 * @return 0 pour OK, -1 pour erreur.
+	 */
 	public int addTask(Task newTask)
 	{
 		if (newTask == null)
@@ -128,6 +168,11 @@ public class TasksService
 		}
 	}
 	
+	/**
+	 * Modifier une tache existante dans la base de données.
+	 * @param modifiedTask la tache à modifier.
+	 * @return 0 pour OK, -1 pour erreur.
+	 */
 	public int editTask(Task modifiedTask)
 	{
 		if (modifiedTask == null)
@@ -165,6 +210,12 @@ public class TasksService
 		}
 	}
 	
+	/**
+	 * Supprimer une tache de la base de données.
+	 * 
+	 * @param idTask l'id de la tache a supprimer.
+	 * @return 0 pour OK, -1 pour erreur.
+	 */
 	public int deleteTask(int idTask)
 	{
 		Connection connection = null;

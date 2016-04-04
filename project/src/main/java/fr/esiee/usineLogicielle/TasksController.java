@@ -6,12 +6,20 @@ import fr.esiee.usineLogicielle.Routes.GetTaskViewRoute;
 import fr.esiee.usineLogicielle.Routes.GetTasksListRoute;
 import fr.esiee.usineLogicielle.Routes.PostAddTaskRoute;
 import fr.esiee.usineLogicielle.Routes.PutTaskEditRoute;
-import spark.Request;
-import spark.Response;
-import spark.Route;
 
+/**
+ * Le controlleur du Back-end du projet.
+ * 
+ * @author perdigao
+ *
+ */
 public class TasksController 
 {
+	/**
+	 * appelle chaque fonction de routage des webs services avec la librairie java spark.
+	 * 
+	 * @param tasksService Le modèle du back-end du projet.
+	 */
 	public TasksController(final TasksService tasksService) 
 	{
 		//renvoie les donnees au format Json

@@ -15,13 +15,40 @@ import org.junit.Test;
 import fr.esiee.usineLogicielle.Task;
 import fr.esiee.usineLogicielle.TasksService;
 
+/**
+ * Test sur JDBC
+ * Utilisation de la librairie DBUnit.
+ * 
+ * @author perdigao
+ *
+ */
 public class DBTests {
 
+	/**
+	 * Driver de la librairie DBUnit pour MySQL.
+	 */
 	private static final String JDBC_DRIVER = org.gjt.mm.mysql.Driver.class.getName();
+	
+	/**
+	 * Url de la base de données de test MySQL.
+	 */
 	private static final String JDBC_URL = "jdbc:mysql://127.0.0.1:3306/TasksTest";
+	
+	/**
+	 * Id de l'utilisateur de la BDD de test.
+	 */
 	private static final String USER = "root";
+	
+	/**
+	 * Password de l'utilisateur de la BDD de test.
+	 */
 	private static final String PASSWORD = "El/fuerte31";
 
+	/**
+	 * importe les données de test contenu dans le fichier XML dataset.xml
+	 * 
+	 * @throws Exception
+	 */
 	@Before
 	public void importDataSet() throws Exception {
 		IDataSet dataSet = readDataSet();
@@ -39,6 +66,11 @@ public class DBTests {
 		databaseTester.onSetup();
 	}
 
+	/**
+	 * Test la méthode getTaskList du modèle.
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void getTaskListTest() throws Exception 
 	{
@@ -61,6 +93,13 @@ public class DBTests {
 		Assert.assertEquals(tasks.get(2).body, "Ceci est le troisième test");
 	}
 	
+	/**
+	 * Test la méthode getTaskByID du modèle.
+	 * Deux tests : 1) récupère bien les objets existant dans la base
+	 * 				2) retourne une erreur quand la tache n'existe pas en BDD
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void getTaskByID() throws Exception 
 	{
@@ -81,6 +120,12 @@ public class DBTests {
 		Assert.assertEquals(task42, null);
 	}
 	
+	/**
+	 * Test qui vérifie la méthode addTask du modèle.
+	 * Retourne une erreur si la tache fournie en entrée est null.
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void addTaskTest() throws Exception
 	{
@@ -107,6 +152,12 @@ public class DBTests {
 		Assert.assertEquals(result, -1);
 	}
 	
+	/**
+	 * Test qui vérifie la méthode editTask du modèle.
+	 * Retourne une erreur si la tache fournie en entrée est null.
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void editTaskTest() throws Exception
 	{
@@ -129,10 +180,16 @@ public class DBTests {
 		Assert.assertEquals(t.body, "voila, c'est changé!");
 		
 		Task fake = null;
-		result = repository.addTask(fake);
+		result = repository.editTask(fake);
 		Assert.assertEquals(result, -1);
 	}
 	
+	/**
+	 * Test qui vérifie la méthode deleteTask du modèle.
+	 * Vérifie que la suppression d'une tache inexistante ne modifie pas le contenu de la base de données.
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void deleteTaskTest() throws Exception
 	{
@@ -156,9 +213,5 @@ public class DBTests {
 		result = repository.deleteTask(42);
 		tasks = repository.getTaskList();
 		Assert.assertEquals(tasks.size(), 2);
-		
-		Task fake = null;
-		result = repository.addTask(fake);
-		Assert.assertEquals(result, -1);
 	}
 }
