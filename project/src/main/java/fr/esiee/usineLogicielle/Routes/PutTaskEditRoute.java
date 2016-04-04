@@ -1,5 +1,7 @@
 package fr.esiee.usineLogicielle.Routes;
 
+import com.google.gson.JsonSyntaxException;
+
 import fr.esiee.usineLogicielle.JsonUtil;
 import fr.esiee.usineLogicielle.Task;
 import fr.esiee.usineLogicielle.TasksService;
@@ -20,13 +22,21 @@ public class PutTaskEditRoute implements Route
 	@Override
 	public Object handle(Request request, Response response) throws Exception 
 	{
-		String temp = request.params(":Task");
-		Task task = JsonUtil.fromJson(temp);
-		int result = model.editTask(task);
-		if (result == 0)
-			return "ok";
-		else
-			return "error";
+		String temp = request.body();
+		
+		try
+		{
+			Task task = JsonUtil.fromJson(temp);
+			int result = model.editTask(task);
+			if (result == 0)
+				return "ok";
+			else
+				return "error";
+		}
+		catch (JsonSyntaxException e)
+		{
+			return "La tache envoyée est dans un format json incorrect";
+		}
 	}
 
 }

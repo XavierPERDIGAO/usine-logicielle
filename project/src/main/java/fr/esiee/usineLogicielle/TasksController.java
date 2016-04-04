@@ -29,15 +29,9 @@ public class TasksController
 	    put("/api/task-edit/:Task", new PutTaskEditRoute(tasksService), JsonUtil.json());
 	    
 	    //ajoute une tache a la liste
-	    post("/api/task-create/:Task", new PostAddTaskRoute(tasksService), JsonUtil.json());
+	    post("/api/task-create", new PostAddTaskRoute(tasksService), JsonUtil.json());
 	    
 	    //supprime une tache
 	    delete("/api/task-delete/:id", new DeleteTaskRoute(tasksService), JsonUtil.json());
-	    
-	    //renvoie l'erreur
-	    exception(IllegalArgumentException.class, (e, req, res) -> {
-	    	  res.status(400);
-	    	  res.body(JsonUtil.toJson(new ResponseError(e)));
-	    });
 	  }
 }

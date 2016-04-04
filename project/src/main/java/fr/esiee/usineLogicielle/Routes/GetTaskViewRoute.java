@@ -1,6 +1,5 @@
 package fr.esiee.usineLogicielle.Routes;
 
-import fr.esiee.usineLogicielle.ResponseError;
 import fr.esiee.usineLogicielle.Task;
 import fr.esiee.usineLogicielle.TasksService;
 import spark.Request;
@@ -19,13 +18,20 @@ public class GetTaskViewRoute implements Route
 	@Override
 	public Object handle(Request request, Response response) throws Exception 
 	{
-	  	  int id = Integer.parseInt(request.params(":id"));
-	  	  Task task = model.getTaskByID(id);
-	  	  if (task != null) {
-	  		    return task;
-	  	  }
-	  	  response.status(400);
-	  	  return new ResponseError("There is no task with this " + id + " found");
+		try
+		{
+		  	int id = Integer.parseInt(request.params(":id"));
+		  	Task task = model.getTaskByID(id);
+		  	if (task != null) 
+		  	{
+		  		return task;
+		  	}
+		  	return "There is no task with id " + id + " found";
+		}
+		catch (NumberFormatException e)
+		{
+			return "l'identifiant n'est pas un entier";
+		}
 	}
 
 }
