@@ -15,6 +15,9 @@
         ProxyPass /tomcat http://0.0.0.0:9020/
         ProxyPassReverse /tomcat http://0.0.0.0:9020/
         
+        ProxyPass /tasks-java-ee http://0.0.0.0:9020/tasks-java-ee
+        ProxyPassReverse /tasks-java-ee http://0.0.0.0:9020/tasks-java-ee
+        
         <Proxy>
             Order Allow,Deny
             Allow from all

@@ -28,3 +28,5 @@
     - include: playbooks/tomcat.yml
     - include: playbooks/artifactory.yml
     - include: playbooks/postfix.yml
+    - name: Démarrage du job Jenkins
+      shell: "java -jar jenkins-cli.jar -s http://localhost:8080/jenkins build UsineLogicielle"

@@ -22,9 +22,6 @@ Vagrant.configure(2) do |config|
   # within the machine from a port on the host machine. In the example below,
   # accessing "localhost:8080" will access port 80 on the guest machine.
   config.vm.network "forwarded_port", guest: 80,   host: 8081 # Apache
-  config.vm.network "forwarded_port", guest: 8080, host: 8082 # Jenkins
-  config.vm.network "forwarded_port", guest: 8081, host: 8083 # Artifactory
-  config.vm.network "forwarded_port", guest: 9000, host: 8084 # SonarQube
   config.vm.network "forwarded_port", guest: 9020, host: 8085 # Tomcat
   
   # SSH
