@@ -45,6 +45,6 @@ public class Main implements SparkApplication
 
         get("/", (req, res) -> new ModelAndView(templateVariables, "hello.hbs"), templateEngine);
         
-        TasksController.init(new TasksService());
+        ApiController.init(new TasksService());
     }
 }

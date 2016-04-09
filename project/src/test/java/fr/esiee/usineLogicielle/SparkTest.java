@@ -1,5 +1,8 @@
 package fr.esiee.usineLogicielle;
 
+import static org.easymock.EasyMock.anyString;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
@@ -92,14 +95,15 @@ public class SparkTest extends EasyMockSupport
 	@Test
 	public void deleteTaskRouteTest1() throws Exception
 	{
-		EasyMock.expect(model.deleteTask(1)).andReturn((0));
-		EasyMock.expect(request.params(":id")).andReturn("1");
-		
+		expect(model.deleteTask(1)).andReturn((0));
+		expect(request.params(":id")).andReturn("1");
+        response.type(anyString());
+        expectLastCall();
 		replayAll();
 		
-		String response = (String)deleteTaskRoute.handle(request, null);
+		String res = (String)deleteTaskRoute.handle(request, response);
 
-		assertEquals("ok", response);
+		assertEquals("ok", res);
 		
 		verifyAll();
 	}
@@ -112,14 +116,15 @@ public class SparkTest extends EasyMockSupport
 	@Test
 	public void deleteTaskRouteTest2() throws Exception
 	{
-		EasyMock.expect(model.deleteTask(1)).andReturn((-1));
-		EasyMock.expect(request.params(":id")).andReturn("1");
-		
+		expect(model.deleteTask(1)).andReturn((-1));
+		expect(request.params(":id")).andReturn("1");
+        response.type(anyString());
+        expectLastCall();
 		replayAll();
 		
-		String response = (String)deleteTaskRoute.handle(request, null);
+		String res = (String)deleteTaskRoute.handle(request, response);
 
-		assertEquals("error", response);
+		assertEquals("error", res);
 		
 		verifyAll();
 	}
@@ -132,13 +137,15 @@ public class SparkTest extends EasyMockSupport
 	@Test
 	public void editTaskRouteTest1() throws Exception
 	{
-		EasyMock.expect(request.body()).andReturn("{\"id\":1,\"title\":\"Test1\",\"body\":\"Ceci est un test1\"}");
-		EasyMock.expect(model.editTask(EasyMock.anyObject())).andReturn(0);
+		expect(request.body()).andReturn("{\"id\":1,\"title\":\"Test1\",\"body\":\"Ceci est un test1\"}");
+		expect(model.editTask(EasyMock.anyObject())).andReturn(0);
+        response.type(anyString());
+        expectLastCall();
 		replayAll();
 		
-		String response = (String)editTaskRoute.handle(request, null);
+		String res = (String)editTaskRoute.handle(request, response);
 
-		assertEquals("ok", response);
+		assertEquals("ok", res);
 		
 		verifyAll();
 	}
@@ -151,13 +158,15 @@ public class SparkTest extends EasyMockSupport
 	@Test
 	public void editTaskRouteTest2() throws Exception
 	{
-		EasyMock.expect(request.body()).andReturn("{\"id\":1,\"title\":\"Test1\",\"body\":\"Ceci est un test1\"}");
-		EasyMock.expect(model.editTask(EasyMock.anyObject())).andReturn(-1);
+		expect(request.body()).andReturn("{\"id\":1,\"title\":\"Test1\",\"body\":\"Ceci est un test1\"}");
+		expect(model.editTask(EasyMock.anyObject())).andReturn(-1);
+        response.type(anyString());
+        expectLastCall();
 		replayAll();
 		
-		String response = (String)editTaskRoute.handle(request, null);
+		String res = (String)editTaskRoute.handle(request, response);
 
-		assertEquals("error", response);
+		assertEquals("error", res);
 		
 		verifyAll();
 	}
@@ -171,13 +180,15 @@ public class SparkTest extends EasyMockSupport
 	@Test
 	public void editTaskRouteTest3() throws Exception
 	{
-		EasyMock.expect(request.body()).andReturn("fake");
-		EasyMock.expect(model.editTask(EasyMock.anyObject())).andReturn(0);
+		expect(request.body()).andReturn("fake");
+		expect(model.editTask(EasyMock.anyObject())).andReturn(0);
+        response.type(anyString());
+        expectLastCall();
 		replayAll();
 		
-		String response = (String)editTaskRoute.handle(request, null);
+		String res = (String)editTaskRoute.handle(request, response);
 
-		assertEquals("La tache envoyée est dans un format json incorrect", response);
+		assertEquals("La tache envoyée est dans un format json incorrect", res);
 	}
 		
 	/**
@@ -188,13 +199,15 @@ public class SparkTest extends EasyMockSupport
 	@Test
 	public void addTaskRouteTest1() throws Exception
 	{
-		EasyMock.expect(request.body()).andReturn("{\"id\":1,\"title\":\"Test1\",\"body\":\"Ceci est un test1\"}");
-		EasyMock.expect(model.addTask(EasyMock.anyObject())).andReturn(0);
+		expect(request.body()).andReturn("{\"id\":1,\"title\":\"Test1\",\"body\":\"Ceci est un test1\"}");
+		expect(model.addTask(EasyMock.anyObject())).andReturn(0);
+        response.type(anyString());
+        expectLastCall();
 		replayAll();
 		
-		String response = (String)addTaskRoute.handle(request, null);
+		String res = (String)addTaskRoute.handle(request, response);
 
-		assertEquals("ok", response);
+		assertEquals("ok", res);
 		
 		verifyAll();
 	}
@@ -207,13 +220,15 @@ public class SparkTest extends EasyMockSupport
 	@Test
 	public void addTaskRouteTest2() throws Exception
 	{
-		EasyMock.expect(request.body()).andReturn("{\"id\":1,\"title\":\"Test1\",\"body\":\"Ceci est un test1\"}");
-		EasyMock.expect(model.addTask(EasyMock.anyObject())).andReturn(-1);
+		expect(request.body()).andReturn("{\"id\":1,\"title\":\"Test1\",\"body\":\"Ceci est un test1\"}");
+		expect(model.addTask(EasyMock.anyObject())).andReturn(-1);
+        response.type(anyString());
+        expectLastCall();
 		replayAll();
 		
-		String response = (String)addTaskRoute.handle(request, null);
+		String res = (String)addTaskRoute.handle(request, response);
 
-		assertEquals("error", response);
+		assertEquals("error", res);
 		
 		verifyAll();
 	}
@@ -227,13 +242,15 @@ public class SparkTest extends EasyMockSupport
 	@Test
 	public void addTaskRouteTest3() throws Exception
 	{
-		EasyMock.expect(request.body()).andReturn("fake");
-		EasyMock.expect(model.addTask(EasyMock.anyObject())).andReturn(0);
+		expect(request.body()).andReturn("fake");
+		expect(model.addTask(EasyMock.anyObject())).andReturn(0);
+        response.type(anyString());
+        expectLastCall();
 		replayAll();
 		
-		String response = (String)addTaskRoute.handle(request, null);
+		String res = (String)addTaskRoute.handle(request, response);
 
-		assertEquals("La tache envoyée est dans un format json incorrect", response);
+		assertEquals("La tache envoyée est dans un format json incorrect", res);
 	}
 	
 	/**
@@ -248,15 +265,17 @@ public class SparkTest extends EasyMockSupport
 		t.setTitle("titre");
 		t.setBody("Ceci est un test");
 		
-		EasyMock.expect(request.params(":id")).andReturn("1");
-		EasyMock.expect(model.getTaskByID(1)).andReturn(t);
+		expect(request.params(":id")).andReturn("1");
+		expect(model.getTaskByID(1)).andReturn(t);
+        response.type(anyString());
+        expectLastCall();
 		replayAll();
 		
-		Task response = (Task)getTaskRoute.handle(request, null);
+		Task res = (Task)getTaskRoute.handle(request, response);
 
-		assertEquals(1, response.getId());
-		assertEquals("titre", response.getTitle());
-		assertEquals("Ceci est un test", response.getBody());
+		assertEquals(1, res.getId());
+		assertEquals("titre", res.getTitle());
+		assertEquals("Ceci est un test", res.getBody());
 		
 		verifyAll();
 	}
@@ -268,14 +287,16 @@ public class SparkTest extends EasyMockSupport
 	@Test
 	public void getTaskRouteTest2() throws Exception
 	{	
-		EasyMock.expect(request.params(":id")).andReturn("1");
-		EasyMock.expect(model.getTaskByID(1)).andReturn(null);
+		expect(request.params(":id")).andReturn("1");
+		expect(model.getTaskByID(1)).andReturn(null);
+        response.type(anyString());
+        expectLastCall();
 		replayAll();
 		
-		String response = (String)getTaskRoute.handle(request, null);
+		String res = (String)getTaskRoute.handle(request, response);
 
-		assertEquals("There is no task with id 1 found", response);
-		assertNotEquals("There is no task with id 2 found", response);
+		assertEquals("There is no task with id 1 found", res);
+		assertNotEquals("There is no task with id 2 found", res);
 		
 		verifyAll();
 	}
@@ -287,13 +308,15 @@ public class SparkTest extends EasyMockSupport
 	@Test
 	public void getTaskRouteTest3() throws Exception
 	{
-		EasyMock.expect(request.params(":id")).andReturn("fake");
-		EasyMock.expect(model.getTaskByID(1)).andReturn(null);
+		expect(request.params(":id")).andReturn("fake");
+		expect(model.getTaskByID(1)).andReturn(null);
+        response.type(anyString());
+        expectLastCall();
 		replayAll();
 		
-		String response = (String)getTaskRoute.handle(request, null);
+		String res = (String)getTaskRoute.handle(request, response);
 
-		assertEquals("l'identifiant n'est pas un entier", response);
+		assertEquals("l'identifiant n'est pas un entier", res);
 	}
 	
 	/**
@@ -304,12 +327,14 @@ public class SparkTest extends EasyMockSupport
 	@Test
 	public void getTaskListRouteTest1() throws Exception
 	{	
-		EasyMock.expect(model.getTaskList()).andReturn(null);
+		expect(model.getTaskList()).andReturn(null);
+        response.type(anyString());
+        expectLastCall();
 		replayAll();
 		
-		Object response = getTaskListRoute.handle(null, null);
+		Object res = getTaskListRoute.handle(null, response);
 
-		assertEquals(null, response);
+		assertEquals(null, res);
 		
 		verifyAll();
 	}
@@ -322,13 +347,15 @@ public class SparkTest extends EasyMockSupport
 	@Test
 	public void getTaskListRouteTest2() throws Exception
 	{
-		EasyMock.expect(model.getTaskList()).andReturn(new ArrayList<Task>());
+		expect(model.getTaskList()).andReturn(new ArrayList<Task>());
+		response.type(anyString());
+		expectLastCall();
 		replayAll();
 		
 		@SuppressWarnings("unchecked")
-		List<Task> response = (List<Task>) getTaskListRoute.handle(null, null);
+		List<Task> res = (List<Task>) getTaskListRoute.handle(null, response);
 
-		assertEquals(0, response.size());
+		assertEquals(0, res.size());
 		
 		verifyAll();
 	}
@@ -344,13 +371,15 @@ public class SparkTest extends EasyMockSupport
 		returnedByMock.add(new Task());
 		returnedByMock.add(new Task());
 		
-		EasyMock.expect(model.getTaskList()).andReturn(returnedByMock);
+		expect(model.getTaskList()).andReturn(returnedByMock);
+        response.type(anyString());
+        expectLastCall();
 		replayAll();
 		
 		@SuppressWarnings("unchecked")
-		List<Task> response = (List<Task>) getTaskListRoute.handle(null, null);
+		List<Task> res = (List<Task>) getTaskListRoute.handle(null, response);
 
-		assertEquals(2, response.size());
+		assertEquals(2, res.size());
 		
 		verifyAll();
 	}

@@ -13,12 +13,12 @@ import fr.esiee.usineLogicielle.routes.PutTaskEditRoute;
  *
  * @author perdigao
  */
-public final class TasksController
+public final class ApiController
 {
     /**
      * Constructeur privé. Classe utilitaire.
      */
-    private TasksController(){}
+    private ApiController(){}
 
     /**
      * appelle chaque fonction de routage des webs services avec la librairie java spark.

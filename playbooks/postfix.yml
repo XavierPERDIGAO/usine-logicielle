@@ -16,11 +16,11 @@
   copy: src=config_files/mail/sasl_passwd dest=/etc/postfix/sasl/sasl_passwd
   
 - name: Commandes shell de configuration Postfix
-  shell: " cat /etc/ssl/certs/Thawte_Premium_Server_CA.pem | sudo tee -a /etc/postfix/cacert.pem && \
-           chmod 400 /etc/postfix/sasl/sasl_passwd && \
-           postmap /etc/postfix/sasl/sasl_passwd && \
-           chown postfix /etc/postfix/sasl/sasl_passwd
-          "
+  shell: "cat /etc/ssl/certs/Thawte_Premium_Server_CA.pem | sudo tee -a /etc/postfix/cacert.pem && \
+          chmod 400 /etc/postfix/sasl/sasl_passwd && \
+          postmap /etc/postfix/sasl/sasl_passwd && \
+          chown postfix /etc/postfix/sasl/sasl_passwd"
+  ignore_errors: yes
           
 - name: Relancer Postfix
   service: name=postfix state=restarted

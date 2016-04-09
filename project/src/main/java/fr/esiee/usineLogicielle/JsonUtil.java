@@ -11,6 +11,7 @@ import com.google.gson.Gson;
  */
 public final class JsonUtil
 {
+    private static Gson jsonFormatter = new Gson();
     /**
      * Classe utilitaire
      */
@@ -24,7 +25,7 @@ public final class JsonUtil
      */
     public static String toJson(Object object)
     {
-        return new Gson().toJson(object);
+        return jsonFormatter.toJson(object);
     }
 
     /**
@@ -35,7 +36,7 @@ public final class JsonUtil
      */
     public static Task fromJson(String s)
     {
-        return new Gson().fromJson(s, Task.class);
+        return jsonFormatter.fromJson(s, Task.class);
     }
 
     /**

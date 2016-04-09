@@ -49,7 +49,7 @@
     login_password="{{sonar.jdbc}}"
   sudo_user: "mysql"
   
-- name: Création de la BDD du projet LaravelTasks
+- name: Création de la BDD du projet
   mysql_db: 
     login_password=root
     login_user=root
@@ -59,7 +59,7 @@
 - name: Transfert du fichier sql de creation de la table Task
   copy: src=config_files/SQL/createTask.sql dest=/tmp/createTask.sql
   
-- name: Création de la Table Task du projet LaravelTasks
+- name: Création de la Table Task du projet
   mysql_db: 
     login_password=root
     login_user=root
@@ -67,7 +67,7 @@
     state=import
     target="/tmp/createTask.sql"
     
-- name: Création de la BDD de test du projet LaravelTasks
+- name: Création de la BDD de test du projet
   mysql_db: 
     login_password=root
     login_user=root

@@ -66,5 +66,5 @@
   changed_when: false
 
 - name: Création du job Jenkins
-  shell: "echo '{{ lookup('file', '../config_files/jenkins/usine_logicielle_job.xml') }}' | java -jar jenkins-cli.jar -s http://localhost:8080/jenkins create-job UsineLogicielle && \"
+  shell: "echo '{{ lookup('file', '../config_files/jenkins/usine_logicielle_job.xml') }}' | java -jar jenkins-cli.jar -s http://localhost:8080/jenkins create-job UsineLogicielle"
   when: jenkins_jobs.stdout.find("UsineLogicielle") == -1
