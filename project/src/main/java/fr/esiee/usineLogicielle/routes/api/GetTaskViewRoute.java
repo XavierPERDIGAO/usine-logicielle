@@ -1,17 +1,18 @@
-package fr.esiee.usineLogicielle.routes;
+package fr.esiee.usineLogicielle.routes.api;
+
+import fr.esiee.usineLogicielle.Task;
 import fr.esiee.usineLogicielle.TasksService;
 import spark.Request;
 import spark.Response;
 import spark.Route;
 
-
 /**
- * Route appellée par spark qui va récupérer la liste des tâches sauvegardées en BDD.
+ * Route appellée par spark qui va procéder à la récupération d'une tâche précise en BDD.
  * 
  * @author perdigao
  *
  */
-public class GetTasksListRoute implements Route
+public class GetTaskViewRoute implements Route 
 {
 	/**
 	 * Le modèle du back-end
@@ -23,11 +24,11 @@ public class GetTasksListRoute implements Route
 	 * 
 	 * @param model Le modèle du back-end
 	 */
-	public GetTasksListRoute(TasksService model)
+	public GetTaskViewRoute(TasksService model)
 	{
 		this.model = model;
 	}
-	
+
 	/**
 	 * Fonction de routage du webService, appelle le modèle du back end.
 	 * 
@@ -39,7 +40,20 @@ public class GetTasksListRoute implements Route
 	public Object handle(Request request, Response response) throws Exception 
 	{
 		response.type("application/json");
-  	  	return model.getTaskList();
+		try
+		{
+		  	int id = Integer.parseInt(request.params(":id"));
+		  	Task task = model.getTaskByID(id);
+		  	if (task != null) 
+		  	{
+		  		return task;
+		  	}
+		  	return "There is no task with id " + id + " found";
+		}
+		catch (NumberFormatException e)
+		{
+			return "l'identifiant n'est pas un entier";
+		}
 	}
 
 }

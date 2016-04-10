@@ -1,0 +1,23 @@
+<h1>Task List</h1>
+<p class="lead">Here's a list of all your tasks. <a href="create/">Add a new one?</a></p>
+<hr>
+
+{{#each tasks}}
+    <div data-name="{{ id }}">
+        <h3 data-name="task-{{id}}">{{ title }}</h3>
+        <p data-name="task-{{id}}">{{ body }}</p>
+
+        <div class="container-fluid">
+            <div class="row" data-name="task-{{id}}">
+                <div class="col-md-6">
+                    <a href="{{ view_url id }}" name="{{ id }}" class="btn btn-info">View Task</a>
+                    <a href="{{ edit_url id }}" name="{{ id }}" class="btn btn-primary">Edit Task</a>
+                </div>
+                <div class="col-md-6 text-right">
+                    <a href="" data-target="{{ id }}" class="btn btn-danger">Delete Task</a>
+                </div>
+            </div>
+        </div>
+        <hr/>
+    </div>
+{{/each}}

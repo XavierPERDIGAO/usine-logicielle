@@ -3,16 +3,12 @@ package fr.esiee.usineLogicielle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 
 public class TasksService
@@ -44,19 +40,23 @@ public class TasksService
     public TasksService()
     {
         Properties properties = new Properties();
-        InputStream stream = this.getClass().getResourceAsStream("config.properties");
         try
         {
-            properties.load(stream);
+            ResourceBundle bundle = ResourceBundle.getBundle("config");
+            Enumeration<String> keys = bundle.getKeys();
+            while (keys.hasMoreElements()) {
+                String key = keys.nextElement();
+                properties.put(key, bundle.getString(key));
+            }
         }
-        catch(IOException | NullPointerException | IllegalStateException e)
+        catch(NullPointerException e)
         {
             logger.error("Unable to load file config.properties", e);
         }
 
         url = properties.getProperty("db.connection.jdbcUrl", "jdbc:mysql://127.0.0.1:3306/TasksTest");
         user = properties.getProperty("db.connection.user", "root");
-        url = properties.getProperty("db.connection.password", "root");
+        password = properties.getProperty("db.connection.password", "root");
     }
 
     /**
@@ -79,7 +79,7 @@ public class TasksService
      *
      * @return la liste des taches sauvegardées en BDD.
      */
-    public List<Task> getTaskList()
+    public List<Task> getTaskList() throws TasksServiceException
     {
         List<Task> tasks = new ArrayList<>();
 
@@ -100,7 +100,8 @@ public class TasksService
         }
         catch(Exception e)
         {
-            logger.debug("Unable to retreive tasks list", e);
+            logger.error("Unable to retreive tasks list", e);
+            throw new TasksServiceException("Unable to retreive tasks list", e);
         }
 
         return tasks;
@@ -112,7 +113,7 @@ public class TasksService
      * @param idTask l'id de la tache a récupérer.
      * @return la tache souhaitée.
      */
-    public Task getTaskByID(int idTask)
+    public Task getTaskByID(int idTask) throws TasksServiceException
     {
         Task t = null;
         int numberOfTasks = 0;
@@ -134,11 +135,12 @@ public class TasksService
                 numberOfTasks++;
             }
 
-            if(numberOfTasks > 1) throw new Exception("Erreur : plusieurs taches trouvées pour cet indice");
+            if(numberOfTasks > 1) throw new TasksServiceException("Error: multiple tasks found for id " + idTask);
         }
         catch(Exception e)
         {
             logger.error("Unable to retreive task {}", idTask, e);
+            throw new TasksServiceException("Unable to retreive task " + idTask, e);
         }
 
         return t;
@@ -149,11 +151,10 @@ public class TasksService
      * l'id de la tache à sauvegarder n'est pas prise en compte.
      *
      * @param newTask la tache à sauvegarder
-     * @return 0 pour OK, -1 pour erreur.
      */
-    public int addTask(Task newTask)
+    public void addTask(Task newTask) throws TasksServiceException
     {
-        if(newTask == null) return -1;
+        if(newTask == null) throw new TasksServiceException("Unable to create task");
 
         try(
                 Connection connection = DriverManager.getConnection(url, user, password);
@@ -167,14 +168,13 @@ public class TasksService
             if(result == Statement.EXECUTE_FAILED)
             {
                 logger.error("Unable to create task");
-                return -1;
+                throw new TasksServiceException("Unable to create task");
             }
-            return 0;
         }
         catch(Exception e)
         {
             logger.error("Unable to create task", e);
-            return -1;
+            throw new TasksServiceException("Unable to create task", e);
         }
     }
 
@@ -182,11 +182,10 @@ public class TasksService
      * Modifier une tache existante dans la base de données.
      *
      * @param modifiedTask la tache à modifier.
-     * @return 0 pour OK, -1 pour erreur.
      */
-    public int editTask(Task modifiedTask)
+    public void editTask(Task modifiedTask) throws TasksServiceException
     {
-        if(modifiedTask == null) return -1;
+        if(modifiedTask == null) throw new TasksServiceException("Unable to edit task: null variable");
 
         try(
                 Connection connection = DriverManager.getConnection(url, user, password);
@@ -201,14 +200,13 @@ public class TasksService
             if(result == Statement.EXECUTE_FAILED)
             {
                 logger.error("Unable to edit task {}", modifiedTask.getId());
-                return -1;
+                throw new TasksServiceException("Unable to edit task " + modifiedTask.getId());
             }
-            return 0;
         }
         catch(Exception e)
         {
             logger.error("Unable to edit task {}", modifiedTask.getId(), e);
-            return -1;
+            throw new TasksServiceException("Unable to edit task " + modifiedTask.getId(), e);
         }
     }
 
@@ -216,9 +214,8 @@ public class TasksService
      * Supprimer une tache de la base de données.
      *
      * @param idTask l'id de la tache a supprimer.
-     * @return 0 pour OK, -1 pour erreur.
      */
-    public int deleteTask(int idTask)
+    public void deleteTask(int idTask) throws TasksServiceException
     {
         try(
                 Connection connection = DriverManager.getConnection(url, user, password);
@@ -230,14 +227,13 @@ public class TasksService
             if(result == Statement.EXECUTE_FAILED)
             {
                 logger.error("unable to delete task {}", idTask);
-                return -1;
+                throw new TasksServiceException("Unable to edit task " + idTask);
             }
-            return 0;
         }
         catch(Exception e)
         {
             logger.error("unable to delete task {}", idTask, e);
-            return -1;
+            throw new TasksServiceException("Unable to edit task " + idTask, e);
         }
     }
 }

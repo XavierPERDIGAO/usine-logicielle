@@ -1,8 +1,5 @@
 package fr.esiee.usineLogicielle;
 
-import java.io.File;
-import java.util.List;
-
 import org.dbunit.IDatabaseTester;
 import org.dbunit.JdbcDatabaseTester;
 import org.dbunit.dataset.IDataSet;
@@ -11,6 +8,9 @@ import org.dbunit.operation.DatabaseOperation;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.File;
+import java.util.List;
 
 /**
  * Test sur JDBC
@@ -134,20 +134,23 @@ public class DBTest
 		task42.setTitle("Tache num 42");
 		task42.setBody("la tache imaginaire");
 		
-		int result = repository.addTask(task42);
+		repository.addTask(task42);
 		List<Task> tasks = repository.getTaskList();
-		
-		Assert.assertEquals(result, 0);
+
 		Assert.assertEquals(tasks.size(), 4);
 		
 		Task t = tasks.get(3);
 		
 		Assert.assertEquals(t.getTitle(), "Tache num 42");
 		Assert.assertEquals(t.getBody(), "la tache imaginaire");
-		
+	}
+
+	@Test(expected = TasksServiceException.class)
+	public void addBadTask() throws Exception
+	{
+		TasksService repository = new TasksService(JDBC_URL, USER, PASSWORD);
 		Task fake = null;
-		result = repository.addTask(fake);
-		Assert.assertEquals(result, -1);
+		repository.addTask(fake);
 	}
 	
 	/**
@@ -166,20 +169,23 @@ public class DBTest
 		task1.setTitle("Tache1 : Test Modifié");
 		task1.setBody("voila, c'est changé!");
 		
-		int result = repository.editTask(task1);
+		repository.editTask(task1);
 		List<Task> tasks = repository.getTaskList();
-		
-		Assert.assertEquals(result, 0);
+
 		Assert.assertEquals(tasks.size(), 3);
 		
 		Task t = repository.getTaskByID(1);
 		
 		Assert.assertEquals(t.getTitle(), "Tache1 : Test Modifié");
 		Assert.assertEquals(t.getBody(), "voila, c'est changé!");
-		
+	}
+
+	@Test(expected = TasksServiceException.class)
+	public void editBadTask() throws Exception
+	{
+		TasksService repository = new TasksService(JDBC_URL, USER, PASSWORD);
 		Task fake = null;
-		result = repository.editTask(fake);
-		Assert.assertEquals(result, -1);
+		repository.editTask(fake);
 	}
 	
 	/**
@@ -193,10 +199,9 @@ public class DBTest
 	{
 		TasksService repository = new TasksService(JDBC_URL, USER, PASSWORD);
 		
-		int result = repository.deleteTask(1);
+		repository.deleteTask(1);
 		List<Task> tasks = repository.getTaskList();
-		
-		Assert.assertEquals(result, 0);
+
 		Assert.assertEquals(tasks.size(), 2);
 		
 		Assert.assertEquals(tasks.get(0).getId(), 2);
@@ -208,7 +213,7 @@ public class DBTest
 		Assert.assertEquals(tasks.get(1).getBody(), "Ceci est le troisième test");
 		
 		//Effacer une tache qui n'existe pas : pas de changement dans la liste.
-		result = repository.deleteTask(42);
+		repository.deleteTask(42);
 		tasks = repository.getTaskList();
 		Assert.assertEquals(tasks.size(), 2);
 	}

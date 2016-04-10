@@ -1,13 +1,12 @@
 package fr.esiee.usineLogicielle;
 
-import static org.easymock.EasyMock.anyString;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gson.JsonParseException;
 import org.easymock.EasyMock;
 import org.easymock.EasyMockRule;
 import org.easymock.EasyMockSupport;
@@ -18,11 +17,11 @@ import org.junit.Test;
 
 import spark.Request;
 import spark.Response;
-import fr.esiee.usineLogicielle.routes.DeleteTaskRoute;
-import fr.esiee.usineLogicielle.routes.GetTaskViewRoute;
-import fr.esiee.usineLogicielle.routes.GetTasksListRoute;
-import fr.esiee.usineLogicielle.routes.PostAddTaskRoute;
-import fr.esiee.usineLogicielle.routes.PutTaskEditRoute;
+import fr.esiee.usineLogicielle.routes.api.DeleteTaskRoute;
+import fr.esiee.usineLogicielle.routes.api.GetTaskViewRoute;
+import fr.esiee.usineLogicielle.routes.api.GetTasksListRoute;
+import fr.esiee.usineLogicielle.routes.api.PostAddTaskRoute;
+import fr.esiee.usineLogicielle.routes.api.PutTaskEditRoute;
 
 /**
  * Test sur les routes du projet.
@@ -95,9 +94,12 @@ public class SparkTest extends EasyMockSupport
 	@Test
 	public void deleteTaskRouteTest1() throws Exception
 	{
-		expect(model.deleteTask(1)).andReturn((0));
+		model.deleteTask(1);
+		expectLastCall();
 		expect(request.params(":id")).andReturn("1");
         response.type(anyString());
+        expectLastCall();
+        response.status(200);
         expectLastCall();
 		replayAll();
 		
@@ -116,9 +118,12 @@ public class SparkTest extends EasyMockSupport
 	@Test
 	public void deleteTaskRouteTest2() throws Exception
 	{
-		expect(model.deleteTask(1)).andReturn((-1));
+		model.deleteTask(1);
+		expectLastCall().andThrow(new TasksServiceException(""));
 		expect(request.params(":id")).andReturn("1");
         response.type(anyString());
+        expectLastCall();
+        response.status(500);
         expectLastCall();
 		replayAll();
 		
@@ -138,8 +143,11 @@ public class SparkTest extends EasyMockSupport
 	public void editTaskRouteTest1() throws Exception
 	{
 		expect(request.body()).andReturn("{\"id\":1,\"title\":\"Test1\",\"body\":\"Ceci est un test1\"}");
-		expect(model.editTask(EasyMock.anyObject())).andReturn(0);
+		model.editTask(EasyMock.anyObject());
+		expectLastCall();
         response.type(anyString());
+        expectLastCall();
+        response.status(200);
         expectLastCall();
 		replayAll();
 		
@@ -159,8 +167,11 @@ public class SparkTest extends EasyMockSupport
 	public void editTaskRouteTest2() throws Exception
 	{
 		expect(request.body()).andReturn("{\"id\":1,\"title\":\"Test1\",\"body\":\"Ceci est un test1\"}");
-		expect(model.editTask(EasyMock.anyObject())).andReturn(-1);
+		model.editTask(EasyMock.anyObject());
+		expectLastCall().andThrow(new TasksServiceException(""));
         response.type(anyString());
+        expectLastCall();
+        response.status(500);
         expectLastCall();
 		replayAll();
 		
@@ -181,14 +192,17 @@ public class SparkTest extends EasyMockSupport
 	public void editTaskRouteTest3() throws Exception
 	{
 		expect(request.body()).andReturn("fake");
-		expect(model.editTask(EasyMock.anyObject())).andReturn(0);
+		model.editTask(EasyMock.anyObject());
+		expectLastCall();
         response.type(anyString());
+        expectLastCall();
+        response.status(500);
         expectLastCall();
 		replayAll();
 		
 		String res = (String)editTaskRoute.handle(request, response);
 
-		assertEquals("La tache envoyée est dans un format json incorrect", res);
+		assertEquals("Impossible d'éditer la tâche: mauvais format JSON", res);
 	}
 		
 	/**
@@ -200,8 +214,11 @@ public class SparkTest extends EasyMockSupport
 	public void addTaskRouteTest1() throws Exception
 	{
 		expect(request.body()).andReturn("{\"id\":1,\"title\":\"Test1\",\"body\":\"Ceci est un test1\"}");
-		expect(model.addTask(EasyMock.anyObject())).andReturn(0);
+		model.addTask(EasyMock.anyObject());
+		expectLastCall();
         response.type(anyString());
+        expectLastCall();
+        response.status(200);
         expectLastCall();
 		replayAll();
 		
@@ -221,8 +238,11 @@ public class SparkTest extends EasyMockSupport
 	public void addTaskRouteTest2() throws Exception
 	{
 		expect(request.body()).andReturn("{\"id\":1,\"title\":\"Test1\",\"body\":\"Ceci est un test1\"}");
-		expect(model.addTask(EasyMock.anyObject())).andReturn(-1);
+		model.addTask(EasyMock.anyObject());
+		expectLastCall().andThrow(new TasksServiceException(""));
         response.type(anyString());
+        expectLastCall();
+        response.status(500);
         expectLastCall();
 		replayAll();
 		
@@ -243,10 +263,13 @@ public class SparkTest extends EasyMockSupport
 	public void addTaskRouteTest3() throws Exception
 	{
 		expect(request.body()).andReturn("fake");
-		expect(model.addTask(EasyMock.anyObject())).andReturn(0);
+		model.addTask(EasyMock.anyObject());
+		expectLastCall();
         response.type(anyString());
         expectLastCall();
-		replayAll();
+        response.status(500);
+        expectLastCall();
+        replayAll();
 		
 		String res = (String)addTaskRoute.handle(request, response);
 

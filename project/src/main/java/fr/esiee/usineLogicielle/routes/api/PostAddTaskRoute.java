@@ -1,10 +1,11 @@
-package fr.esiee.usineLogicielle.routes;
+package fr.esiee.usineLogicielle.routes.api;
 
 import com.google.gson.JsonSyntaxException;
 
 import fr.esiee.usineLogicielle.JsonUtil;
 import fr.esiee.usineLogicielle.Task;
 import fr.esiee.usineLogicielle.TasksService;
+import fr.esiee.usineLogicielle.TasksServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spark.Request;
@@ -52,16 +53,21 @@ public class PostAddTaskRoute implements Route
 		try
 		{
 			Task task = JsonUtil.fromJson(temp);
-			int result = model.addTask(task);
-			if (result == 0)
-				return "ok";
-			else
-				return "error";
+			model.addTask(task);
+			response.status(200);
+			return "ok";
 		}
 		catch (JsonSyntaxException e)
 		{
-			logger.error("La tache envoyée est dans un format json incorrect", e);
+			logger.error("Unable to add task: bad JSON format", e);
+            response.status(500);
 			return "La tache envoyée est dans un format json incorrect";
+		}
+		catch(TasksServiceException e)
+		{
+            logger.error("Unable to add task: server error", e);
+            response.status(500);
+			return "error";
 		}
 	}
 
