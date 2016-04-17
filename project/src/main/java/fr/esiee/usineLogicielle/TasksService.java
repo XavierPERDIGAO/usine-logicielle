@@ -10,7 +10,12 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.*;
 
-
+/**
+ * L'acces a la base de donnees de l'application
+ * 
+ * @author perdigao
+ *
+ */
 public class TasksService
 {
     private final static Logger logger = LoggerFactory.getLogger(TasksService.class);
@@ -54,7 +59,7 @@ public class TasksService
             logger.error("Unable to load file config.properties", e);
         }
 
-        url = properties.getProperty("db.connection.jdbcUrl", "jdbc:mysql://127.0.0.1:3306/TasksTest");
+        url = properties.getProperty("db.connection.jdbcUrl", "jdbc:mysql://127.0.0.1:3306/Tasks");
         user = properties.getProperty("db.connection.user", "root");
         password = properties.getProperty("db.connection.password", "root");
     }

@@ -201,7 +201,7 @@ public class SparkTest extends EasyMockSupport
 		
 		String res = (String)editTaskRoute.handle(request, response);
 
-		assertEquals("Impossible d'editer la tâche: mauvais format JSON", res);
+		assertEquals("Impossible d'editer la tache: mauvais format JSON", res);
 	}
 		
 	/**
