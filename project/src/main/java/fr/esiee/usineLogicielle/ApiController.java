@@ -16,7 +16,7 @@ import fr.esiee.usineLogicielle.routes.api.PutTaskEditRoute;
 public final class ApiController
 {
     /**
-     * Constructeur privé. Classe utilitaire.
+     * Constructeur prive. Classe utilitaire.
      */
     private ApiController(){}
 
@@ -34,7 +34,7 @@ public final class ApiController
         get("/api/task-view/:id", new GetTaskViewRoute(tasksService), JsonUtil.json());
 
         //edite une tache de la liste
-        put("/api/task-edit/", new PutTaskEditRoute(tasksService), JsonUtil.json());
+        put("/api/task-edit", new PutTaskEditRoute(tasksService), JsonUtil.json());
 
         //ajoute une tache a la liste
         post("/api/task-create", new PostAddTaskRoute(tasksService), JsonUtil.json());

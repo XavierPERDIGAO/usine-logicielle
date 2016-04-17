@@ -1,7 +1,7 @@
 package fr.esiee.usineLogicielle;
 
 /**
- * Erreur spécifique pour {@link TasksService}
+ * Erreur specifique pour {@link TasksService}
  */
 public class TasksServiceException extends Exception
 {

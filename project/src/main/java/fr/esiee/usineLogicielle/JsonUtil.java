@@ -5,7 +5,7 @@ import spark.ResponseTransformer;
 import com.google.gson.Gson;
 
 /**
- * Classe possédant des méthodes statiques permettant de manipuler le format Json.
+ * Classe possedant des methodes statiques permettant de manipuler le format Json.
  *
  * @author perdigao
  */
@@ -18,10 +18,10 @@ public final class JsonUtil
     private JsonUtil(){}
 
     /**
-     * fonction permettant de sérialiser un objet en Json.
+     * fonction permettant de serialiser un objet en Json.
      *
-     * @param object L'objet à sérialiser.
-     * @return la chaine de caractère contenant l'objet codé en Json.
+     * @param object L'objet a serialiser.
+     * @return la chaine de caractere contenant l'objet code en Json.
      */
     public static String toJson(Object object)
     {
@@ -29,10 +29,10 @@ public final class JsonUtil
     }
 
     /**
-     * fonction permettant de récupérer un objet codé en Json.
+     * fonction permettant de recuperer un objet code en Json.
      *
-     * @param s la chaine de caractère codée en Json.
-     * @return l'objet Tâche désérialisé.
+     * @param s la chaine de caractere codee en Json.
+     * @return l'objet Tache deserialise.
      */
     public static Task fromJson(String s)
     {
@@ -40,9 +40,9 @@ public final class JsonUtil
     }
 
     /**
-     * fonction appelée dans les méthodes de routage de Spark. Permet d'appeler la méthode toJson automatiquement sur l'objet retourné par les fonctions de route.
+     * fonction appelee dans les methodes de routage de Spark. Permet d'appeler la methode toJson automatiquement sur l'objet retourne par les fonctions de route.
      *
-     * @return l'objet retourné par le routage, sérialisé en json.
+     * @return l'objet retourne par le routage, serialise en json.
      */
     public static ResponseTransformer json()
     {

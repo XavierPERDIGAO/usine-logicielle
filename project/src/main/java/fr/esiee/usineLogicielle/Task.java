@@ -1,7 +1,7 @@
 package fr.esiee.usineLogicielle;
 
 /**
- * Le modèle d'une tache.
+ * Le modele d'une tache.
  *
  * @author perdigao
  */
@@ -38,7 +38,7 @@ public class Task
     }
 
     /**
-     * @return le texte contenu dans la tâche.
+     * @return le texte contenu dans la tache.
      */
     public String getBody()
     {

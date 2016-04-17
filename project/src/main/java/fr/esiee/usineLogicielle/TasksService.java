@@ -20,7 +20,7 @@ public class TasksService
     private static final String INSERT_QUERY = "INSERT INTO Task(title, body) VALUES (?, ?);";
     private static final String SELECT_QUERY = "SELECT * FROM Task WHERE id = ?;";
     /**
-     * L'url d'appel à la base de données MySQL
+     * L'url d'appel a la base de donnees MySQL
      */
     private String url;
 
@@ -35,7 +35,7 @@ public class TasksService
     private String password;
 
     /**
-     * Constructeur vide, appelle les paramètres MySQL par défaut
+     * Constructeur vide, appelle les parametres MySQL par defaut
      */
     public TasksService()
     {
@@ -60,10 +60,10 @@ public class TasksService
     }
 
     /**
-     * Constructeur permettant d'entrer les paramètres MySQL
-     * Utilisé dans les Tests Unitaires de cette classe pour ouvrir la BDD de test.
+     * Constructeur permettant d'entrer les parametres MySQL
+     * Utilise dans les Tests Unitaires de cette classe pour ouvrir la BDD de test.
      *
-     * @param url      l'url de la base de données à ouvrir en MySQL
+     * @param url      l'url de la base de donnees a ouvrir en MySQL
      * @param user     l'id de l'utilisateur MySQL
      * @param password le password de l'utilisateur MySQL
      */
@@ -75,9 +75,9 @@ public class TasksService
     }
 
     /**
-     * Fonction qui ouvre la base de données et récupère la liste de toutes les taches en mémoire.
+     * Fonction qui ouvre la base de donnees et recupere la liste de toutes les taches en memoire.
      *
-     * @return la liste des taches sauvegardées en BDD.
+     * @return la liste des taches sauvegardees en BDD.
      */
     public List<Task> getTaskList() throws TasksServiceException
     {
@@ -108,10 +108,10 @@ public class TasksService
     }
 
     /**
-     * Récupère dans la BDD une tache précise en fournissant l'id de la tache à récupérer.
+     * Recupere dans la BDD une tache precise en fournissant l'id de la tache a recuperer.
      *
-     * @param idTask l'id de la tache a récupérer.
-     * @return la tache souhaitée.
+     * @param idTask l'id de la tache a recuperer.
+     * @return la tache souhaitee.
      */
     public Task getTaskByID(int idTask) throws TasksServiceException
     {
@@ -147,10 +147,10 @@ public class TasksService
     }
 
     /**
-     * Ajouter une tache dans la base de données.
-     * l'id de la tache à sauvegarder n'est pas prise en compte.
+     * Ajouter une tache dans la base de donnees.
+     * l'id de la tache a sauvegarder n'est pas prise en compte.
      *
-     * @param newTask la tache à sauvegarder
+     * @param newTask la tache a sauvegarder
      */
     public void addTask(Task newTask) throws TasksServiceException
     {
@@ -179,9 +179,9 @@ public class TasksService
     }
 
     /**
-     * Modifier une tache existante dans la base de données.
+     * Modifier une tache existante dans la base de donnees.
      *
-     * @param modifiedTask la tache à modifier.
+     * @param modifiedTask la tache a modifier.
      */
     public void editTask(Task modifiedTask) throws TasksServiceException
     {
@@ -211,7 +211,7 @@ public class TasksService
     }
 
     /**
-     * Supprimer une tache de la base de données.
+     * Supprimer une tache de la base de donnees.
      *
      * @param idTask l'id de la tache a supprimer.
      */

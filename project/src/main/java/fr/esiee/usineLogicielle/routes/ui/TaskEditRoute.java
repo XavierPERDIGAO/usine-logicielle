@@ -9,9 +9,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Route appellee par spark pour rendre la page Tasks
+ * Route appellee par spark pour rendre la page Edit
  */
-public class TasksListRoute implements TemplateViewRoute
+public class TaskEditRoute implements TemplateViewRoute
 {
 	/**
 	 * Fonction de routage du WebService
@@ -24,8 +24,8 @@ public class TasksListRoute implements TemplateViewRoute
     public ModelAndView handle(Request request, Response response) throws Exception
     {
         Map<String, String> templateVariables = new HashMap<>();
-        templateVariables.put("title", "Tasks");
-        templateVariables.put("page", "tasks");
+        templateVariables.put("title", "Task edition");
+        templateVariables.put("page", "edit");
 
         return new ModelAndView(templateVariables, "main.hbs");
     }

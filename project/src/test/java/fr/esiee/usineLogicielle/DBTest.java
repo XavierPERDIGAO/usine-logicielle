@@ -28,7 +28,7 @@ public class DBTest
 	private static final String JDBC_DRIVER = org.gjt.mm.mysql.Driver.class.getName();
 	
 	/**
-	 * Url de la base de données de test MySQL.
+	 * Url de la base de donnees de test MySQL.
 	 */
 	private static final String JDBC_URL = "jdbc:mysql://127.0.0.1:3306/TasksTest";
 	
@@ -43,7 +43,7 @@ public class DBTest
 	private static final String PASSWORD = "root";
 
 	/**
-	 * importe les données de test contenu dans le fichier XML dataset.xml
+	 * importe les donnees de test contenu dans le fichier XML dataset.xml
 	 * 
 	 * @throws Exception
 	 */
@@ -65,7 +65,7 @@ public class DBTest
 	}
 
 	/**
-	 * Test la méthode getTaskList du modèle.
+	 * Test la methode getTaskList du modele.
 	 * 
 	 * @throws Exception
 	 */
@@ -84,16 +84,16 @@ public class DBTest
 		
 		Assert.assertEquals(tasks.get(1).getId(), 2);
 		Assert.assertEquals(tasks.get(1).getTitle(), "Tache2 : Test");
-		Assert.assertEquals(tasks.get(1).getBody(), "Ceci est le deuxième test");
+		Assert.assertEquals(tasks.get(1).getBody(), "Ceci est le deuxieme test");
 		
 		Assert.assertEquals(tasks.get(2).getId(), 3);
 		Assert.assertEquals(tasks.get(2).getTitle(), "Tache3 : Test");
-		Assert.assertEquals(tasks.get(2).getBody(), "Ceci est le troisième test");
+		Assert.assertEquals(tasks.get(2).getBody(), "Ceci est le troisieme test");
 	}
 	
 	/**
-	 * Test la méthode getTaskByID du modèle.
-	 * Deux tests : 1) récupère bien les objets existant dans la base
+	 * Test la methode getTaskByID du modele.
+	 * Deux tests : 1) recupere bien les objets existant dans la base
 	 * 				2) retourne une erreur quand la tache n'existe pas en BDD
 	 * 
 	 * @throws Exception
@@ -113,14 +113,14 @@ public class DBTest
 		
 		Assert.assertEquals(task2.getId(), 2);
 		Assert.assertEquals(task2.getTitle(), "Tache2 : Test");
-		Assert.assertEquals(task2.getBody(), "Ceci est le deuxième test");
+		Assert.assertEquals(task2.getBody(), "Ceci est le deuxieme test");
 		
 		Assert.assertEquals(task42, null);
 	}
 	
 	/**
-	 * Test qui vérifie la méthode addTask du modèle.
-	 * Retourne une erreur si la tache fournie en entrée est null.
+	 * Test qui verifie la methode addTask du modele.
+	 * Retourne une erreur si la tache fournie en entree est null.
 	 * 
 	 * @throws Exception
 	 */
@@ -154,8 +154,8 @@ public class DBTest
 	}
 	
 	/**
-	 * Test qui vérifie la méthode editTask du modèle.
-	 * Retourne une erreur si la tache fournie en entrée est null.
+	 * Test qui verifie la methode editTask du modele.
+	 * Retourne une erreur si la tache fournie en entree est null.
 	 * 
 	 * @throws Exception
 	 */
@@ -166,8 +166,8 @@ public class DBTest
 		
 		Task task1 = new Task();
 		task1.setId(1);
-		task1.setTitle("Tache1 : Test Modifié");
-		task1.setBody("voila, c'est changé!");
+		task1.setTitle("Tache1 : Test Modifie");
+		task1.setBody("voila, c'est change!");
 		
 		repository.editTask(task1);
 		List<Task> tasks = repository.getTaskList();
@@ -176,8 +176,8 @@ public class DBTest
 		
 		Task t = repository.getTaskByID(1);
 		
-		Assert.assertEquals(t.getTitle(), "Tache1 : Test Modifié");
-		Assert.assertEquals(t.getBody(), "voila, c'est changé!");
+		Assert.assertEquals(t.getTitle(), "Tache1 : Test Modifie");
+		Assert.assertEquals(t.getBody(), "voila, c'est change!");
 	}
 
 	@Test(expected = TasksServiceException.class)
@@ -189,8 +189,8 @@ public class DBTest
 	}
 	
 	/**
-	 * Test qui vérifie la méthode deleteTask du modèle.
-	 * Vérifie que la suppression d'une tache inexistante ne modifie pas le contenu de la base de données.
+	 * Test qui verifie la methode deleteTask du modele.
+	 * Verifie que la suppression d'une tache inexistante ne modifie pas le contenu de la base de donnees.
 	 * 
 	 * @throws Exception
 	 */
@@ -206,11 +206,11 @@ public class DBTest
 		
 		Assert.assertEquals(tasks.get(0).getId(), 2);
 		Assert.assertEquals(tasks.get(0).getTitle(), "Tache2 : Test");
-		Assert.assertEquals(tasks.get(0).getBody(), "Ceci est le deuxième test");
+		Assert.assertEquals(tasks.get(0).getBody(), "Ceci est le deuxieme test");
 		
 		Assert.assertEquals(tasks.get(1).getId(), 3);
 		Assert.assertEquals(tasks.get(1).getTitle(), "Tache3 : Test");
-		Assert.assertEquals(tasks.get(1).getBody(), "Ceci est le troisième test");
+		Assert.assertEquals(tasks.get(1).getBody(), "Ceci est le troisieme test");
 		
 		//Effacer une tache qui n'existe pas : pas de changement dans la liste.
 		repository.deleteTask(42);

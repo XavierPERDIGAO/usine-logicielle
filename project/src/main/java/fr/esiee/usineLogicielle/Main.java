@@ -5,7 +5,7 @@ import spark.servlet.SparkApplication;
 import static spark.Spark.staticFileLocation;
 
 /**
- * Entrée du programme
+ * Entree du programme
  *
  * @author perdigao
  */
@@ -24,7 +24,7 @@ public class Main implements SparkApplication
 
     /**
      * Fonction d'initialisation du servlet.
-     * Appelé dans tomcat.
+     * Appele dans tomcat.
      */
     @Override
     public void init()

@@ -17,7 +17,7 @@ public class JsonTest
 {
 
 	/**
-	 * test si l'appli peut récupérer une tache codée en Json.
+	 * test si l'appli peut recuperer une tache codee en Json.
 	 */
 	@Test
 	public void fromJsonTest() 
@@ -30,7 +30,7 @@ public class JsonTest
 	}
 	
 	/**
-	 * test si l'appli peut décoder un objet en format Json.
+	 * test si l'appli peut decoder un objet en format Json.
 	 */
 	@Test
 	public void toJsonTest() 

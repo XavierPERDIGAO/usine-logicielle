@@ -7,7 +7,7 @@ import spark.Response;
 import spark.Route;
 
 /**
- * Route appellée par spark qui va procéder à la récupération d'une tâche précise en BDD.
+ * Route appellee par spark qui va proceder a la recuperation d'une tache precise en BDD.
  * 
  * @author perdigao
  *
@@ -15,14 +15,14 @@ import spark.Route;
 public class GetTaskViewRoute implements Route 
 {
 	/**
-	 * Le modèle du back-end
+	 * Le modele du back-end
 	 */
 	private TasksService model;
 	
 	/**
 	 * Constructeur
 	 * 
-	 * @param model Le modèle du back-end
+	 * @param model Le modele du back-end
 	 */
 	public GetTaskViewRoute(TasksService model)
 	{
@@ -30,11 +30,11 @@ public class GetTaskViewRoute implements Route
 	}
 
 	/**
-	 * Fonction de routage du webService, appelle le modèle du back end.
+	 * Fonction de routage du webService, appelle le modele du back end.
 	 * 
-	 * @param request Objet spark représentant la requête de l'utilisateur en HTTP.
-	 * @param response (non utilisée) Objet spark représentant la réponse en HTTP avec le code
-	 * @return le résultat de la requête utilisateur pour ce web service.
+	 * @param request Objet spark representant la requete de l'utilisateur en HTTP.
+	 * @param response (non utilisee) Objet spark representant la reponse en HTTP avec le code
+	 * @return le resultat de la requete utilisateur pour ce web service.
 	 */
 	@Override
 	public Object handle(Request request, Response response) throws Exception 
